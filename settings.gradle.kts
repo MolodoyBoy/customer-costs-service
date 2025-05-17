@@ -28,6 +28,7 @@ dependencyResolutionManagement {
             library("flywayCore", "org.flywaydb:flyway-core:10.14.0")
             library("flywayPostgres", "org.flywaydb:flyway-database-postgresql:10.14.0")
 
+            library("springWebFlux", "org.springframework", "spring-webflux").withoutVersion()
             library("springContext", "org.springframework", "spring-context").withoutVersion()
             library("springAutoConfigure", "org.springframework", "spring-boot-autoconfigure").withoutVersion()
             library("springWeb", "org.springframework", "spring-web").withoutVersion()
@@ -117,4 +118,3 @@ include("integration:customer-costs-reload")
 include("integration:customer-costs-kafka")
 include("integration:customer-costs-database")
 include("infrastructure:rest-api:ccs-openapi")
-include("infrastructure:webpack")
