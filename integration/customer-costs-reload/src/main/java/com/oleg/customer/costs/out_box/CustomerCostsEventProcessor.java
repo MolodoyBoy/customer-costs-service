@@ -6,7 +6,6 @@ import com.oleg.customer.costs.source.CustomerCostsEventSource;
 import com.oleg.customer.costs.source.CustomerCostsPublisher;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.Set;
@@ -33,7 +32,6 @@ public class CustomerCostsEventProcessor {
         this.customerCostsEventSource = customerCostsEventSource;
     }
 
-    @Transactional
     public void processEvents(Map<Long, Integer> events) {
         if (events.isEmpty()) return;
 
