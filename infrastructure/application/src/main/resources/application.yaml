@@ -1,0 +1,61 @@
+server:
+    port: 8081
+    shutdown: graceful
+    max-http-request-header-size: 2MB
+
+spring:
+    profiles:
+        default: default
+        active: default, dev
+    mvc:
+        pathmatch:
+            matching-strategy: ant_path_matcher
+    application:
+        name: 'customer-costs-service'
+    datasource:
+        name: customer-costs
+        username: ${oleg.database.username}
+        password: ${oleg.database.password}
+        url: 'jdbc:postgresql://${oleg.database.host}:5433/customer-costs?sslmode=disable'
+        hikari:
+            maximum-pool-size: 40
+            connection-timeout: 2000
+    kafka:
+        consumer:
+            auto-offset-reset: earliest
+            max-poll-records: 100
+
+        bootstrap-servers: ${oleg.kafka.host}:9092
+    flyway:
+        out-of-order: true
+        clean-disabled: true
+        ignore-migration-patterns:
+            - '*:missing'
+            - '*:future'
+    security:
+        oauth2:
+            resourceserver:
+                 jwt:
+                     secret: "p1mDyrQbk04oVZI8uC00lf9LqsQhGiDSubdpekv6PS0="
+                     jws-algorithms: "HmacSHA256"
+springdoc:
+    swagger-ui:
+        path: /swagger-ui.html
+oleg:
+    database:
+        username: dev
+        password: dev
+        host: localhost
+    kafka:
+        host: localhost
+        customer-costs:
+            id: customer-costs
+            topic: public.customer-costs.v1
+            consumer:
+                group:
+                    id: analytics.customer-costs.v1
+        costs-category:
+            id: costs-category
+            topic: public.costs-category.v1
+            group:
+                id: analytics.costs-category.v1

@@ -1,0 +1,52 @@
+get:
+    tags: [ "user-banks" ]
+    operationId: "getUserBanks"
+    responses:
+        '200':
+            description: OK
+            content:
+                application/json:
+                    schema:
+                        $ref: '../../components/bank/BanksList.yaml'
+        '404':
+            description: Not Found
+            content:
+                application/json:
+                    schema:
+                        $ref: '../../components/error/Error.yaml'
+post:
+    tags: [ "user-banks" ]
+    operationId: "addUserBank"
+    requestBody:
+        content:
+            application/json:
+                schema:
+                    $ref: '../../components/bank/Bank.yaml'
+    responses:
+        '200':
+            description: OK
+        '403':
+            description: Not Found
+            content:
+                application/json:
+                    schema:
+                        $ref: '../../components/error/Error.yaml'
+delete:
+    parameters:
+        -   name: bankId
+            in: query
+            required: true
+            schema:
+                type: integer
+
+    tags: [ "user-banks" ]
+    operationId: "deleteBank"
+    responses:
+        '200':
+            description: OK
+        '403':
+            description: Not Found
+            content:
+                application/json:
+                    schema:
+                        $ref: '../../components/error/Error.yaml'

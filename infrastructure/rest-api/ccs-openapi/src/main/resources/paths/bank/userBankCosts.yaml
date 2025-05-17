@@ -1,0 +1,27 @@
+get:
+    tags: [ "user-bank-costs" ]
+    operationId: "getUserBankCosts"
+    parameters:
+        -   name: bankId
+            in: path
+            required: true
+            schema:
+                type: integer
+        -   name: page
+            in: query
+            required: true
+            schema:
+                type: integer
+    responses:
+        '200':
+            description: OK
+            content:
+                application/json:
+                    schema:
+                        $ref: '../../components/bank/costs/UserBankCostsList.yaml'
+        '404':
+            description: Not Found
+            content:
+                application/json:
+                    schema:
+                        $ref: '../../components/error/Error.yaml'

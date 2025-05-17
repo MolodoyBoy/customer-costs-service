@@ -1,0 +1,17 @@
+type: object
+properties:
+    id:
+        type: integer
+    amount:
+        type: number
+        format: numeric
+    createdAt:
+        type: string
+        format: date-time
+    description:
+        type: string
+required:
+    - id
+    - amount
+    - createdAt
+    - description

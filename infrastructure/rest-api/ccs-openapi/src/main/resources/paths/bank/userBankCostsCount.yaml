@@ -1,0 +1,22 @@
+get:
+    tags: [ "user-bank-costs" ]
+    operationId: "getUserBankCostsCount"
+    parameters:
+        -   name: bankId
+            in: path
+            required: true
+            schema:
+                type: integer
+    responses:
+        '200':
+            description: OK
+            content:
+                application/json:
+                    schema:
+                        $ref: '../../components/bank/costs/UserBankCostsCount.yaml'
+        '404':
+            description: Not Found
+            content:
+                application/json:
+                    schema:
+                        $ref: '../../components/error/Error.yaml'

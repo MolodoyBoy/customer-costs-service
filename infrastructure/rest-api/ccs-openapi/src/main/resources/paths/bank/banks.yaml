@@ -1,0 +1,16 @@
+get:
+    tags: [ "banks" ]
+    operationId: "getSupportedBanks"
+    responses:
+        '200':
+            description: OK
+            content:
+                application/json:
+                    schema:
+                        $ref: '../../components/bank/BanksList.yaml'
+        '404':
+            description: Not Found
+            content:
+                application/json:
+                    schema:
+                        $ref: '../../components/error/Error.yaml'
