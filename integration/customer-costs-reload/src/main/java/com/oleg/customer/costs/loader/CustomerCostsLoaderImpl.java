@@ -4,12 +4,15 @@ import com.oleg.customer.costs.costs.source.CustomerCostsLoader;
 import com.oleg.customer.costs.costs.source.GetCustomerCostsSource;
 import com.oleg.customer.costs.costs.source.ManageCustomerCosts;
 import com.oleg.customer.costs.costs.value_object.CustomerCosts;
+import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
+import static java.lang.Thread.currentThread;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.slf4j.LoggerFactory.getLogger;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 
@@ -27,6 +30,20 @@ public class CustomerCostsLoaderImpl implements CustomerCostsLoader {
         this.manageCustomerCosts = manageCustomerCosts;
         this.getCustomerCostsSource = getCustomerCostsSource;
         this.executorService = newFixedThreadPool(5);
+    }
+
+    @PreDestroy
+    public void shutdown() {
+        executorService.shutdown();
+        try {
+            if (!executorService.awaitTermination(5, SECONDS)) {
+                executorService.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            currentThread().interrupt();
+        } finally {
+            executorService.shutdownNow();
+        }
     }
 
     @Override
