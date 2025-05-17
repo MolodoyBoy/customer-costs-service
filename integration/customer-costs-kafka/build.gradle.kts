@@ -1,6 +1,6 @@
 dependencies {
     implementation(project(":domain"))
-    implementation(project(":integration:customer-costs-reload"))
+    implementation(project(":reload"))
 
     implementation(libs.springKafka)
     implementation(libs.springBootStarter)

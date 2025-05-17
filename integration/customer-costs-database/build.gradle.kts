@@ -29,8 +29,8 @@ buildscript {
 
 dependencies {
     implementation(project(":domain"))
+    implementation(project(":reload"))
     implementation(project(":infrastructure:security"))
-    implementation(project(":integration:customer-costs-reload"))
 
     implementation(libs.flywayCore)
     implementation(libs.postrgesql)

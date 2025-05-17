@@ -13,9 +13,9 @@ springBoot {
 
 dependencies {
     implementation(project(":domain"))
+    implementation(project(":reload"))
     implementation(project(":infrastructure:security"))
     implementation(project(":infrastructure:rest-api"))
-    implementation(project(":integration:customer-costs-reload"))
     implementation(project(":integration:customer-costs-kafka"))
     implementation(project(":infrastructure:rest-api:ccs-openapi"))
     implementation(project(":integration:customer-costs-database"))

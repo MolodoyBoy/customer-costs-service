@@ -109,12 +109,12 @@ dependencyResolutionManagement {
 rootProject.name = "customer-costs-service"
 
 include("domain")
+include("reload")
 include("integration")
 include("infrastructure")
 include("infrastructure:security")
 include("infrastructure:rest-api")
 include("infrastructure:application")
-include("integration:customer-costs-reload")
 include("integration:customer-costs-kafka")
 include("integration:customer-costs-database")
 include("infrastructure:rest-api:ccs-openapi")
