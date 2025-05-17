@@ -4,6 +4,7 @@ import com.oleg.customer.costs.costs.source.CustomerCostsLoader;
 import com.oleg.customer.costs.costs.source.GetCustomerCostsSource;
 import com.oleg.customer.costs.costs.source.ManageCustomerCosts;
 import com.oleg.customer.costs.costs.value_object.CustomerCosts;
+import com.oleg.customer.costs.source.CustomerCostsBankSource;
 import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
@@ -23,12 +24,12 @@ public class CustomerCostsLoaderImpl implements CustomerCostsLoader {
 
     private final ExecutorService executorService;
     private final ManageCustomerCosts manageCustomerCosts;
-    private final GetCustomerCostsSource getCustomerCostsSource;
+    private final CustomerCostsBankSource customerCostsBankSource;
 
     public CustomerCostsLoaderImpl(ManageCustomerCosts manageCustomerCosts,
-                                   GetCustomerCostsSource getCustomerCostsSource) {
+                                   CustomerCostsBankSource customerCostsBankSource) {
         this.manageCustomerCosts = manageCustomerCosts;
-        this.getCustomerCostsSource = getCustomerCostsSource;
+        this.customerCostsBankSource = customerCostsBankSource;
         this.executorService = newFixedThreadPool(5);
     }
 
@@ -58,7 +59,7 @@ public class CustomerCostsLoaderImpl implements CustomerCostsLoader {
 
         while (!success && counter < threshold) {
             try {
-                List<CustomerCosts> customerCosts = getCustomerCostsSource.getCustomerCosts(userId, bankId, null);
+                List<CustomerCosts> customerCosts = customerCostsBankSource.getCustomerCosts(userId, bankId);
                 manageCustomerCosts.save(customerCosts);
                 success = true;
             } catch (Exception e) {
