@@ -1,0 +1,7 @@
+type: object
+properties:
+    maxAmount:
+        type: number
+        format: double
+required:
+    - maxAmount

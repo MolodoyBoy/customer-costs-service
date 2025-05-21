@@ -1,6 +1,16 @@
 pluginManagement {
     repositories {
         mavenCentral()
+        maven {
+            url = uri("https://repo.spring.io/milestone")
+        }
+        maven {
+            url = uri("https://repo.spring.io/snapshot")
+        }
+        maven {
+            name = "Central Portal Snapshots"
+            url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+        }
         gradlePluginPortal()
     }
 
@@ -12,6 +22,7 @@ pluginManagement {
         id("org.flywaydb.flyway") version ("10.14.0")
         id("org.openapi.generator") version ("7.13.0")
         id("com.google.cloud.tools.jib") version ("3.4.1")
+        id("com.github.node-gradle.node") version ("4.0.0")
         id("io.spring.dependency-management") version ("1.1.7")
         id("org.springframework.boot") version (springBootVersion)
     }
@@ -53,6 +64,8 @@ dependencyResolutionManagement {
                 )
             )
 
+            library("chatGPT", "com.openai:openai-java:1.6.1")
+            library("springAI", "org.springframework.ai", "spring-ai-starter-model-openai").withoutVersion()
             library("springdoc", "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
             library("swagger.annotations", "io.swagger:swagger-annotations:1.6.11")
             bundle(
@@ -110,11 +123,14 @@ rootProject.name = "customer-costs-service"
 
 include("domain")
 include("reload")
+include("frontend")
 include("integration")
 include("infrastructure")
+include("integration:chatGPT")
 include("infrastructure:security")
 include("infrastructure:rest-api")
 include("infrastructure:application")
 include("integration:customer-costs-kafka")
 include("integration:customer-costs-database")
 include("infrastructure:rest-api:ccs-openapi")
+include("integration:monobank")

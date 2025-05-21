@@ -10,8 +10,11 @@ properties:
         format: date-time
     description:
         type: string
+    categoryDescription:
+        type: string
 required:
     - id
     - amount
     - createdAt
     - description
+    - categoryDescription

@@ -2,7 +2,7 @@ package com.oleg.customer.costs.publisher;
 
 import com.oleg.customer.costs.costs.value_object.CustomerCosts;
 import com.oleg.customer.costs.data.CustomerCostsData;
-import com.oleg.customer.costs.source.CustomerCostsPublisher;
+import com.oleg.customer.costs.out_box.CustomerCostsPublisher;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;

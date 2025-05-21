@@ -2,8 +2,6 @@ package com.oleg.customer.costs.out_box;
 
 import com.oleg.customer.costs.costs.source.GetCustomerCostsSource;
 import com.oleg.customer.costs.costs.value_object.CustomerCosts;
-import com.oleg.customer.costs.source.CustomerCostsEventSource;
-import com.oleg.customer.costs.source.CustomerCostsPublisher;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 

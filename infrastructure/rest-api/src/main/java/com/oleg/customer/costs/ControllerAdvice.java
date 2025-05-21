@@ -21,15 +21,15 @@ public class ControllerAdvice {
         return new ErrorDto();
     }
 
-    @ExceptionHandler(IllegalStateException.class)
+    @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorDto handleBadRequestException(IllegalStateException e) {
+    public ErrorDto handleBadRequestException(IllegalArgumentException e) {
         logger.info("Bad request: {}", e.getMessage());
         return new ErrorDto().message(e.getMessage());
     }
 
     @ExceptionHandler(NotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorDto handleNotFoundException(NotFoundException e) {
         logger.info("Bad request: {}", e.getMessage());
         return new ErrorDto().message(e.getMessage());

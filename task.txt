@@ -1,1 +1,0 @@
-3. Add ability to set max spending's for specific user + notify user by email, if limit exceeded.

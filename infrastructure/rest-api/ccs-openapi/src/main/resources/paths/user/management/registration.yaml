@@ -1,6 +1,7 @@
 post:
     tags: [ "user-management" ]
     operationId: "registration"
+    security: []
     requestBody:
         required: true
         content:

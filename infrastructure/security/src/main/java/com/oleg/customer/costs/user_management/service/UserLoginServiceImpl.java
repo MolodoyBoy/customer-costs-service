@@ -4,6 +4,7 @@ import com.oleg.customer.costs.user_management.source.UserLoginService;
 import com.oleg.customer.costs.user_management.value_object.LoginUserCommand;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -29,11 +30,15 @@ class UserLoginServiceImpl implements UserLoginService {
 
     @Override
     public void login(LoginUserCommand command) {
-        Authentication authentication = getAuthentication(command);
-        Authentication authenticate = authenticationManager.authenticate(authentication);
-        String jwtToken = jwtTokenGenerator.generateToken(authenticate);
+        try {
+            Authentication authentication = getAuthentication(command);
+            Authentication authenticate = authenticationManager.authenticate(authentication);
+            String jwtToken = jwtTokenGenerator.generateToken(authenticate);
 
-        response.addHeader(AUTHORIZATION, TOKEN_TYPE + jwtToken);
+            response.addHeader(AUTHORIZATION, TOKEN_TYPE + jwtToken);
+        } catch (BadCredentialsException e) {
+            throw new IllegalArgumentException("Invalid username or password!");
+        }
     }
 
     private Authentication getAuthentication(LoginUserCommand command) {

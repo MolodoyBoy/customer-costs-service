@@ -7,9 +7,14 @@ import com.oleg.customer.costs.user_management.source.UserLoginService;
 import com.oleg.customer.costs.user_management.source.UserRegistrationService;
 import com.oleg.customer.costs.user_management.value_object.LoginUserCommand;
 import com.oleg.customer.costs.user_management.value_object.RegisterUserCommand;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CrossOrigin(
+    origins = "http://localhost:3000",
+    exposedHeaders = {"Authorization"}
+)
 public class UserManagementController implements UserManagementApi {
 
     private final UserLoginService userLoginService;

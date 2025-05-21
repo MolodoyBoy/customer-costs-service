@@ -1,6 +1,7 @@
 package com.oleg.customer.costs.costs.source;
 
 import com.oleg.customer.costs.common.Paginator;
+import com.oleg.customer.costs.costs.query.CustomerCostsQuery;
 import com.oleg.customer.costs.costs.value_object.CustomerCosts;
 
 import java.util.Set;
@@ -12,5 +13,5 @@ public interface GetCustomerCostsSource {
 
     List<CustomerCosts> getCustomerCosts(Set<Integer> ids);
 
-    List<CustomerCosts> getCustomerCosts(int userId, int bankId, Paginator paginator);
+    List<CustomerCostsQuery> getCustomerCosts(int userId, int bankId, Paginator paginator);
 }

@@ -6,10 +6,14 @@ package com.oleg.fund.customer.costs.analytics;
 
 import com.oleg.fund.customer.costs.analytics.tables.Bank;
 import com.oleg.fund.customer.costs.analytics.tables.CostsCategory;
+import com.oleg.fund.customer.costs.analytics.tables.CostsCategoryEmbedding;
 import com.oleg.fund.customer.costs.analytics.tables.CustomerCosts;
 import com.oleg.fund.customer.costs.analytics.tables.CustomerCostsEvents;
+import com.oleg.fund.customer.costs.analytics.tables.MonobankUserAccounts;
 import com.oleg.fund.customer.costs.analytics.tables.UserBank;
 import com.oleg.fund.customer.costs.analytics.tables.UserDetails;
+import com.oleg.fund.customer.costs.analytics.tables.UserSpending;
+import com.oleg.fund.customer.costs.analytics.tables.UserTokens;
 
 
 /**
@@ -29,6 +33,11 @@ public class Tables {
     public static final CostsCategory COSTS_CATEGORY = CostsCategory.COSTS_CATEGORY;
 
     /**
+     * The table <code>public.costs_category_embedding</code>.
+     */
+    public static final CostsCategoryEmbedding COSTS_CATEGORY_EMBEDDING = CostsCategoryEmbedding.COSTS_CATEGORY_EMBEDDING;
+
+    /**
      * The table <code>public.customer_costs</code>.
      */
     public static final CustomerCosts CUSTOMER_COSTS = CustomerCosts.CUSTOMER_COSTS;
@@ -39,6 +48,11 @@ public class Tables {
     public static final CustomerCostsEvents CUSTOMER_COSTS_EVENTS = CustomerCostsEvents.CUSTOMER_COSTS_EVENTS;
 
     /**
+     * The table <code>public.monobank_user_accounts</code>.
+     */
+    public static final MonobankUserAccounts MONOBANK_USER_ACCOUNTS = MonobankUserAccounts.MONOBANK_USER_ACCOUNTS;
+
+    /**
      * The table <code>public.user_bank</code>.
      */
     public static final UserBank USER_BANK = UserBank.USER_BANK;
@@ -47,4 +61,14 @@ public class Tables {
      * The table <code>public.user_details</code>.
      */
     public static final UserDetails USER_DETAILS = UserDetails.USER_DETAILS;
+
+    /**
+     * The table <code>public.user_spending</code>.
+     */
+    public static final UserSpending USER_SPENDING = UserSpending.USER_SPENDING;
+
+    /**
+     * The table <code>public.user_tokens</code>.
+     */
+    public static final UserTokens USER_TOKENS = UserTokens.USER_TOKENS;
 }

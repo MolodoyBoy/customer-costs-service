@@ -12,8 +12,9 @@ class JwtAuthenticationConverter implements Converter<Jwt, AbstractAuthenticatio
 
     @Override
     public AbstractAuthenticationToken convert(Jwt jwt) {
+        long userId = jwt.getClaim("userId");
         UserContext userContext = new UserContext(
-            (int) jwt.getClaim("userId"),
+            (int) userId,
             jwt.getClaim("username")
         );
 

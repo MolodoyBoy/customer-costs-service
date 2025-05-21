@@ -1,0 +1,45 @@
+get:
+    tags: [ "user-spending" ]
+    operationId: "getUserSpending"
+    parameters:
+        - name: bankId
+          in: path
+          required: true
+          schema:
+              type: integer
+    responses:
+        '200':
+            description: OK
+            content:
+                application/json:
+                    schema:
+                        $ref: '../../components/user_spending/UserSpending.yaml'
+        '404':
+            description: Not Found
+            content:
+                application/json:
+                    schema:
+                        $ref: '../../components/error/Error.yaml'
+put:
+    tags: [ "user-spending" ]
+    operationId: "updateUserSpending"
+    parameters:
+        -   name: bankId
+            in: path
+            required: true
+            schema:
+                type: integer
+    requestBody:
+        content:
+            application/json:
+                schema:
+                    $ref: '../../components/user_spending/UpdateSpending.yaml'
+    responses:
+        '200':
+            description: OK
+        '403':
+            description: Not Found
+            content:
+                application/json:
+                    schema:
+                        $ref: '../../components/error/Error.yaml'

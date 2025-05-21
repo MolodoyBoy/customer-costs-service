@@ -1,6 +1,7 @@
 get:
     tags: [ "user-banks" ]
     operationId: "getUserBanks"
+    security: []
     responses:
         '200':
             description: OK
@@ -17,11 +18,12 @@ get:
 post:
     tags: [ "user-banks" ]
     operationId: "addUserBank"
+    security: []
     requestBody:
         content:
             application/json:
                 schema:
-                    $ref: '../../components/bank/Bank.yaml'
+                    $ref: '../../components/bank/AddUserBank.yaml'
     responses:
         '200':
             description: OK
@@ -38,7 +40,7 @@ delete:
             required: true
             schema:
                 type: integer
-
+    security: []
     tags: [ "user-banks" ]
     operationId: "deleteBank"
     responses:

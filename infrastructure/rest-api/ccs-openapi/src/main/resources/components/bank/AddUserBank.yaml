@@ -1,0 +1,9 @@
+type: object
+properties:
+    bankId:
+        type: integer
+    userToken:
+        type: string
+required:
+    - bankId
+    - userToken

@@ -4,13 +4,14 @@ CREATE TABLE costs_category(
 );
 
 INSERT INTO costs_category VALUES
-            (1, 'Translations'),
-            (2, 'Online stores'),
-            (3, 'Payments to the budget'),
-            (4, 'Taxi'),
-            (5, 'Beauty'),
-            (6, 'Restaurants, cafes, bars'),
-            (7, 'Education'),
-            (8, 'Medical services'),
-            (9, 'Supermarkets and products'),
-            (10, 'Pharmacies')
+            (1, 'Перекази'),
+            (2, 'Інтернет-магазини'),
+            (3, 'Платежі до бюджету'),
+            (4, 'Таксі'),
+            (5, 'Краса'),
+            (6, 'Ресторани, кафе, бари'),
+            (7, 'Освіта'),
+            (8, 'Медичні послуги'),
+            (9, 'Супермаркети та продукти'),
+            (10, 'Аптеки'),
+            (11, 'Інше');

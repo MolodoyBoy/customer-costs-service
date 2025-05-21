@@ -3,11 +3,24 @@ openapi: 3.0.0
 info:
     version: 1.0.0
     title: Customer Costs Analytics Open API
+
+components:
+    securitySchemes:
+        Authorization:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+
+security:
+    - Authorization: []
+
 paths:
     /banks/supported:
         $ref: 'paths/bank/banks.yaml'
     /user/banks:
         $ref: 'paths/bank/userBanks.yaml'
+    /user/{bankId}/spending:
+        $ref: 'paths/user-spending/userSpending.yaml'
     /user/banks/{bankId}/costs:
         $ref: 'paths/bank/userBankCosts.yaml'
     /user/banks/{bankId}/costs/count:

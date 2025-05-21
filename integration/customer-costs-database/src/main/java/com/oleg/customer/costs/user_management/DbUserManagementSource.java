@@ -7,9 +7,10 @@ import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
 import static com.oleg.fund.customer.costs.analytics.Tables.USER_DETAILS;
+import static com.oleg.fund.customer.costs.analytics.tables.UserTokens.USER_TOKENS;
 
 @Repository
-public class DbUserManagementSource implements UserManagementSource {
+public class DbUserManagementSource implements UserManagementSource, UserTokenSource {
 
     private final DSLContext dslContext;
     private final UserDetailsMapper userDetailsMapper;
@@ -41,5 +42,26 @@ public class DbUserManagementSource implements UserManagementSource {
             .stream()
             .findFirst()
             .orElse(null);
+    }
+
+    @Override
+    public String getUserToken(int userId, int bankId) {
+        return dslContext.select(USER_TOKENS.TOKEN)
+            .from(USER_TOKENS)
+            .where(USER_TOKENS.USER_ID.eq(userId))
+            .and(USER_TOKENS.BANK_ID.eq(bankId))
+            .fetchOne(USER_TOKENS.TOKEN);
+    }
+
+    @Override
+    public void addToken(int userId, int bankId, String token) {
+        dslContext.insertInto(USER_TOKENS)
+            .values(USER_TOKENS.USER_ID, userId)
+            .values(USER_TOKENS.BANK_ID, bankId)
+            .values(USER_TOKENS.TOKEN, token)
+            .onConflict(USER_TOKENS.USER_ID, USER_TOKENS.BANK_ID)
+            .doUpdate()
+            .set(USER_TOKENS.TOKEN, token)
+            .execute();
     }
 }

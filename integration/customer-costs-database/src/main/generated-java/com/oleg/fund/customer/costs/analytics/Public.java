@@ -6,10 +6,14 @@ package com.oleg.fund.customer.costs.analytics;
 
 import com.oleg.fund.customer.costs.analytics.tables.Bank;
 import com.oleg.fund.customer.costs.analytics.tables.CostsCategory;
+import com.oleg.fund.customer.costs.analytics.tables.CostsCategoryEmbedding;
 import com.oleg.fund.customer.costs.analytics.tables.CustomerCosts;
 import com.oleg.fund.customer.costs.analytics.tables.CustomerCostsEvents;
+import com.oleg.fund.customer.costs.analytics.tables.MonobankUserAccounts;
 import com.oleg.fund.customer.costs.analytics.tables.UserBank;
 import com.oleg.fund.customer.costs.analytics.tables.UserDetails;
+import com.oleg.fund.customer.costs.analytics.tables.UserSpending;
+import com.oleg.fund.customer.costs.analytics.tables.UserTokens;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,6 +47,11 @@ public class Public extends SchemaImpl {
     public final CostsCategory COSTS_CATEGORY = CostsCategory.COSTS_CATEGORY;
 
     /**
+     * The table <code>public.costs_category_embedding</code>.
+     */
+    public final CostsCategoryEmbedding COSTS_CATEGORY_EMBEDDING = CostsCategoryEmbedding.COSTS_CATEGORY_EMBEDDING;
+
+    /**
      * The table <code>public.customer_costs</code>.
      */
     public final CustomerCosts CUSTOMER_COSTS = CustomerCosts.CUSTOMER_COSTS;
@@ -53,6 +62,11 @@ public class Public extends SchemaImpl {
     public final CustomerCostsEvents CUSTOMER_COSTS_EVENTS = CustomerCostsEvents.CUSTOMER_COSTS_EVENTS;
 
     /**
+     * The table <code>public.monobank_user_accounts</code>.
+     */
+    public final MonobankUserAccounts MONOBANK_USER_ACCOUNTS = MonobankUserAccounts.MONOBANK_USER_ACCOUNTS;
+
+    /**
      * The table <code>public.user_bank</code>.
      */
     public final UserBank USER_BANK = UserBank.USER_BANK;
@@ -61,6 +75,16 @@ public class Public extends SchemaImpl {
      * The table <code>public.user_details</code>.
      */
     public final UserDetails USER_DETAILS = UserDetails.USER_DETAILS;
+
+    /**
+     * The table <code>public.user_spending</code>.
+     */
+    public final UserSpending USER_SPENDING = UserSpending.USER_SPENDING;
+
+    /**
+     * The table <code>public.user_tokens</code>.
+     */
+    public final UserTokens USER_TOKENS = UserTokens.USER_TOKENS;
 
     /**
      * No further instances allowed
@@ -80,10 +104,14 @@ public class Public extends SchemaImpl {
         return Arrays.asList(
             Bank.BANK,
             CostsCategory.COSTS_CATEGORY,
+            CostsCategoryEmbedding.COSTS_CATEGORY_EMBEDDING,
             CustomerCosts.CUSTOMER_COSTS,
             CustomerCostsEvents.CUSTOMER_COSTS_EVENTS,
+            MonobankUserAccounts.MONOBANK_USER_ACCOUNTS,
             UserBank.USER_BANK,
-            UserDetails.USER_DETAILS
+            UserDetails.USER_DETAILS,
+            UserSpending.USER_SPENDING,
+            UserTokens.USER_TOKENS
         );
     }
 }

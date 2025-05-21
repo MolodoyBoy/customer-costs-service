@@ -1,6 +1,7 @@
 post:
     tags: [ "user-management" ]
     operationId: "login"
+    security: []
     requestBody:
         required: true
         content:

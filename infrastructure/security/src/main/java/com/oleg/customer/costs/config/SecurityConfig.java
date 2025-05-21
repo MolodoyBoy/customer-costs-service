@@ -44,7 +44,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
     @Bean
     @RequestScope
     public UserContext userInfo() {

@@ -1,6 +1,6 @@
 package com.oleg.customer.costs.costs;
 
-import com.oleg.customer.costs.source.CustomerCostsEventSource;
+import com.oleg.customer.costs.out_box.CustomerCostsEventSource;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.springframework.stereotype.Repository;

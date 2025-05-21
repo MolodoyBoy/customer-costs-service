@@ -1,6 +1,6 @@
 package com.oleg.customer.costs.out_box;
 
-import com.oleg.customer.costs.source.CustomerCostsEventSource;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +9,7 @@ import java.util.Map;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 @Component
+@ConditionalOnProperty(value = "oleg.outbox.enable", havingValue = "true")
 public class EventPullingScheduledTask {
 
     private final CustomerCostsEventSource customerCostsEventSource;

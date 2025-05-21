@@ -39,7 +39,7 @@ class UserRegistrationServiceImpl implements UserRegistrationService {
 
         Integer id = userManagementSource.save(encryptedCommand);
         if (id == null) {
-            throw new IllegalStateException("User already existed!");
+            throw new IllegalArgumentException("User already existed!");
         }
 
         userLoginService.login(command.toLoginUserCommand());
@@ -47,7 +47,7 @@ class UserRegistrationServiceImpl implements UserRegistrationService {
 
     private void checkLength(String credential, String credentialName) {
         if (credential.length() < MIN_CREDENTIALS_LENGTH || credential.length() > MAX_CREDENTIALS_LENGTH) {
-            throw new IllegalStateException(
+            throw new IllegalArgumentException(
                 String.format(
                     "Invalid %s length. Must be between %d and %d characters.",
                     credentialName,
