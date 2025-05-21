@@ -162,7 +162,7 @@ export default function Home() {
 
     const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
-    // Logout handler (if you still have it)
+    // Logout handler
     const handleLogout = () => {
         localStorage.removeItem('authToken');
         window.location.href = '/login';
@@ -173,7 +173,13 @@ export default function Home() {
             {/* Header */}
             <header className="mb-4 text-center position-relative">
                 <h1 className="display-4 text-primary">CoinKeeper</h1>
-                {/* Log out button omitted if not needed */}
+                <button
+                    className="btn btn-outline-secondary position-absolute"
+                    style={{ top: '1rem', right: '1rem' }}
+                    onClick={handleLogout}
+                >
+                    Logout
+                </button>
             </header>
 
             {/* Banks Section */}
