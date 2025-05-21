@@ -2,7 +2,7 @@ package com.oleg.customer.costs.costs.source;
 
 import com.oleg.customer.costs.costs.query.CreateCustomerCostsCmd;
 
-public interface CustomerCostsClassifier {
+public interface CustomerCostsCategoryClassifier {
 
-    Double[] classify(CreateCustomerCostsCmd cmd);
+    Integer classify(CreateCustomerCostsCmd cmd);
 }

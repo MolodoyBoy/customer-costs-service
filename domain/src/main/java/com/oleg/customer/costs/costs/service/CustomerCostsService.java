@@ -1,8 +1,8 @@
 package com.oleg.customer.costs.costs.service;
 
 import com.oleg.customer.costs.common.Paginator;
-import com.oleg.customer.costs.costs.categorizer.CustomerCostsCategorizer;
 import com.oleg.customer.costs.costs.query.CustomerCostsQuery;
+import com.oleg.customer.costs.costs.source.CustomerCostsCategoryClassifier;
 import com.oleg.customer.costs.costs.source.GetCustomerCostsSource;
 import com.oleg.customer.costs.costs.query.CreateCustomerCostsCmd;
 import com.oleg.customer.costs.costs.source.ManageCustomerCosts;
@@ -26,20 +26,20 @@ public class CustomerCostsService {
     private final UserAccountsSource userAccountsSource;
     private final ManageCustomerCosts manageCustomerCosts;
     private final GetCustomerCostsSource getCustomerCostsSource;
-    private final CustomerCostsCategorizer customerCostsCategorizer;
+    private final CustomerCostsCategoryClassifier customerCostsCategoryClassifier;
 
     public CustomerCostsService(UserContext userContext,
                                 UserSpendingSource userSpendingSource,
                                 UserAccountsSource userAccountsSource,
                                 ManageCustomerCosts manageCustomerCosts,
                                 GetCustomerCostsSource getCustomerCostsSource,
-                                CustomerCostsCategorizer customerCostsCategorizer) {
+                                CustomerCostsCategoryClassifier customerCostsCategoryClassifier) {
         this.userContext = userContext;
         this.userSpendingSource = userSpendingSource;
         this.userAccountsSource = userAccountsSource;
         this.manageCustomerCosts = manageCustomerCosts;
         this.getCustomerCostsSource = getCustomerCostsSource;
-        this.customerCostsCategorizer = customerCostsCategorizer;
+        this.customerCostsCategoryClassifier = customerCostsCategoryClassifier;
     }
 
     public int getCustomerCostsCount(int bankId) {
@@ -55,7 +55,17 @@ public class CustomerCostsService {
     public void saveCustomerCosts(CreateCustomerCostsCmd cmd) {
         Integer userId = userAccountsSource.getUserIdByAccountNumber(cmd.accountId());
 
-        CustomerCosts categorizedCosts = customerCostsCategorizer.categorize(userId, cmd);
+        Integer categoryId = customerCostsCategoryClassifier.classify(cmd);
+        CustomerCosts categorizedCosts = new CustomerCosts(
+            -1,
+            userId,
+            cmd.bankId(),
+            categoryId,
+            cmd.amount(),
+            cmd.description(),
+            cmd.createdAt()
+        );
+
         manageCustomerCosts.save(List.of(categorizedCosts));
 
         BigDecimal currentAmount = currentAmount(List.of(categorizedCosts));
