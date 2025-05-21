@@ -6,13 +6,12 @@ import {
     UserBanksApi,
     UserBankCostsApi,
     UserSpendingApi,
-    AddUserBank as BankModel,
-    UpdateSpending
+    UpdateSpending,
+    AddUserBank
 } from 'ccs-openapi-client';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from 'react-router-dom';
 import '../index.css';
-import {logout, getAuthToken} from '../auth';
+import { getAuthToken } from '../auth';
 
 const PAGE_SIZE = 25;
 const API_BASE = process.env.REACT_APP_API_BASE_URL;
@@ -34,7 +33,11 @@ export default function Home() {
     const [limit, setLimit]         = useState(null);
     const [current, setCurrent]     = useState(null);
     const [newLimit, setNewLimit]   = useState('');
-    const navigate = useNavigate();
+
+    // Modal state for token entry
+    const [showTokenModal, setShowTokenModal] = useState(false);
+    const [bankToAddId, setBankToAddId]       = useState(null);
+    const [userTokenInput, setUserTokenInput] = useState('');
 
     // Auto-hide errors
     useEffect(() => {
@@ -103,23 +106,32 @@ export default function Home() {
         });
     }
 
-    const handleAddBank = () => {
-        setErrorMessage(null);
+    // Open the token entry modal
+    const openTokenModal = () => {
         if (!selectedBankId) return;
-        const bankToAdd = supportedBanks.find(b => b.id.toString() === selectedBankId);
-        if (!bankToAdd) return;
+        setBankToAddId(parseInt(selectedBankId, 10));
+        setUserTokenInput('');
+        setShowTokenModal(true);
+    };
+
+    // Apply adding bank with user token
+    const applyAddBank = () => {
+        setErrorMessage(null);
+        const dto = new AddUserBank(bankToAddId, userTokenInput);
         new UserBanksApi().addUserBank(
-            { bank: new BankModel(bankToAdd.id, bankToAdd.description) },
+            { addUserBank: dto },
             (err, _d, resp) => {
                 if (err && resp?.status === 400) {
-                    setErrorMessage(resp.body?.message || 'Этот банк уже добавлен.');
+                    setErrorMessage(resp.body?.message || 'Не удалось добавить банк.');
                 } else {
                     loadUserBanks();
                 }
+                setShowTokenModal(false);
             }
         );
     };
 
+    // Set spending limit
     const handleSetLimit = () => {
         setErrorMessage(null);
         if (!selectedUserBankId || newLimit.trim() === '') return;
@@ -131,11 +143,11 @@ export default function Home() {
             { updateSpending: update },
             (err, _d, resp) => {
                 if (err) {
-                    if (resp?.status === 400) {
-                        setErrorMessage(resp.body?.message);
+                    if (resp?.status === 403) {
+                        setErrorMessage(resp.body?.message || 'Доступ запрещён');
                     }
                 } else {
-                    // refresh
+                    // refresh spending data
                     new UserSpendingApi().getUserSpending(bankId, (e2, data2) => {
                         if (!e2) {
                             setLimit(data2.maxAmount ?? null);
@@ -150,9 +162,10 @@ export default function Home() {
 
     const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
+    // Logout handler (if you still have it)
     const handleLogout = () => {
-        logout();
-        navigate('/login');
+        localStorage.removeItem('authToken');
+        window.location.href = '/login';
     };
 
     return (
@@ -160,23 +173,16 @@ export default function Home() {
             {/* Header */}
             <header className="mb-4 text-center position-relative">
                 <h1 className="display-4 text-primary">CoinKeeper</h1>
-                <button
-                    className="btn btn-outline-danger position-absolute"
-                    style={{ top: 0, right: 0, margin: '1rem' }}
-                    onClick={handleLogout}
-                >
-                    Log out
-                </button>
+                {/* Log out button omitted if not needed */}
             </header>
 
             {/* Banks Section */}
             <div className="row mb-4">
-                {/* Available Banks */}
                 <div className="col-md-6 mb-3 position-relative">
                     {errorMessage && (
                         <div
                             className="alert alert-danger position-absolute"
-                            style={{ top: '0.75rem', left: '0.75rem', zIndex: 10 }}
+                            style={{ top: '0.75rem', left: '0.75rem', zIndex: 10, maxWidth: 300 }}
                         >
                             {errorMessage}
                         </div>
@@ -196,15 +202,13 @@ export default function Home() {
                                         </option>
                                     ))}
                                 </select>
-                                <button className="btn btn-primary" onClick={handleAddBank}>
+                                <button className="btn btn-primary" onClick={openTokenModal}>
                                     Добавить
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                {/* Selected Banks */}
                 <div className="col-md-6 mb-3">
                     <div className="card shadow-sm">
                         <div className="card-body">
@@ -236,7 +240,6 @@ export default function Home() {
 
             {/* Limit and Overview Section */}
             <div className="row mb-4">
-                {/* Set Limit */}
                 <div className="col-md-6 mb-3">
                     <div className="card shadow-sm">
                         <div className="card-body">
@@ -261,7 +264,6 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
-                {/* Current Sum */}
                 <div className="col-md-6 mb-3">
                     <div className="card shadow-sm">
                         <div className="card-body">
@@ -297,20 +299,20 @@ export default function Home() {
                         <table className="table table-striped mb-3">
                             <thead>
                             <tr>
-                                <th>Amount</th>
-                                <th>Description</th>
-                                <th>Date</th>
-                                <th>Category description</th>
+                                <th>Дата</th>
+                                <th>Описание</th>
+                                <th>Сумма</th>
+                                <th>Категория</th>
                             </tr>
                             </thead>
                             <tbody>
                             {costs.length > 0 ? (
-                                costs.map(cost => (
-                                    <tr key={cost.id}>
-                                        <td>{cost.amount}</td>
-                                        <td>{cost.description}</td>
-                                        <td>{new Date(cost.createdAt).toLocaleDateString()}</td>
-                                        <td>{cost.categoryDescription}</td>
+                                costs.map(c => (
+                                    <tr key={c.id}>
+                                        <td>{new Date(c.createdAt).toLocaleDateString()}</td>
+                                        <td>{c.description}</td>
+                                        <td>{c.amount}</td>
+                                        <td>{c.categoryDescription}</td>
                                     </tr>
                                 ))
                             ) : (
@@ -347,6 +349,36 @@ export default function Home() {
                 </div>
             </div>
 
+            {/* Token Modal */}
+            {showTokenModal && (
+                <div
+                    className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+                    style={{ background: 'rgba(0,0,0,0.5)', zIndex: 20 }}
+                >
+                    <div className="card p-4" style={{ maxWidth: '400px', width: '100%' }}>
+                        <h5 className="mb-3">Введите токен для банка</h5>
+                        <input
+                            type="text"
+                            className="form-control mb-3"
+                            placeholder="User token"
+                            value={userTokenInput}
+                            onChange={e => setUserTokenInput(e.target.value)}
+                        />
+                        <div className="d-flex justify-content-end">
+                            <button
+                                className="btn btn-secondary me-2"
+                                onClick={() => setShowTokenModal(false)}
+                            >
+                                Отмена
+                            </button>
+                            <button className="btn btn-primary" onClick={applyAddBank}>
+                                Применить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Footer */}
             <footer className="text-center text-muted small">
                 © {new Date().getFullYear()} CoinKeeper
@@ -354,3 +386,4 @@ export default function Home() {
         </div>
     );
 }
+
