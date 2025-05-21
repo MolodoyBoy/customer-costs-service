@@ -4,6 +4,7 @@ import com.oleg.customer.costs.loader.BankSubscriber;
 import com.oleg.customer.costs.monobank.UserAccountsSource;
 import com.oleg.customer.costs.user_management.UserTokenSource;
 import org.slf4j.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.slf4j.LoggerFactory.getLogger;
+import static org.springframework.http.HttpStatus.*;
 
 @Component
 public class MonobankSubscriber implements BankSubscriber {
@@ -43,12 +45,18 @@ public class MonobankSubscriber implements BankSubscriber {
             .uri("/personal/client-info")
             .header("X-Token", userTokenSource.getUserToken(userId, BANK_ID))
             .header("Content-Type", "application/json")
-            .retrieve()
-            .bodyToMono(ClientInfo.class)
-            .map(clientInfo -> clientInfo.getAccounts().stream()
-                    .map(ClientInfo.Account::getId)
-                    .toList()
-            );
+            .exchangeToMono(response -> {
+                if (response.statusCode().isError()) {
+                    return response.bodyToMono(String.class)
+                        .flatMap(body -> Mono.error(new IllegalArgumentException("Incorrect token!")));
+                }
+
+                return response.bodyToMono(ClientInfo.class)
+                    .map(ci -> ci.getAccounts().stream()
+                        .map(ClientInfo.Account::getId)
+                        .toList()
+                    );
+            });
 
         List<String> accountIds = mono.block();
         if (accountIds == null || accountIds.isEmpty()) {

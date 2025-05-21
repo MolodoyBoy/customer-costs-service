@@ -34,6 +34,8 @@ public class BankLoaderImpl implements BankLoader {
                 BankSubscriber bankSubscriber = bankSubscribers.get(bankId);
                 bankSubscriber.subscribe(userId);
                 success = true;
+            } catch (IllegalArgumentException e) {
+                throw e;
             } catch (Exception e) {
                 counter += 1;
                 logger.error(e.getMessage(), e);
