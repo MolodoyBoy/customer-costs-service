@@ -92,6 +92,7 @@ public class SecurityConfig {
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
                         "/swagger-ui.html",
+                        "/monobank/**",
                         "/swagger-ui.html/**"
                     ).permitAll()
                     .requestMatchers("/user/**").permitAll()

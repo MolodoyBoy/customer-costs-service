@@ -56,12 +56,19 @@ public class DbUserManagementSource implements UserManagementSource, UserTokenSo
     @Override
     public void addToken(int userId, int bankId, String token) {
         dslContext.insertInto(USER_TOKENS)
-            .values(USER_TOKENS.USER_ID, userId)
-            .values(USER_TOKENS.BANK_ID, bankId)
-            .values(USER_TOKENS.TOKEN, token)
+            .set(toRecord(userId, bankId, token))
             .onConflict(USER_TOKENS.USER_ID, USER_TOKENS.BANK_ID)
             .doUpdate()
             .set(USER_TOKENS.TOKEN, token)
             .execute();
+    }
+
+    private org.jooq.Record toRecord(int userId, int bankId, String token) {
+        var rc = dslContext.newRecord(USER_TOKENS);
+        rc.set(USER_TOKENS.USER_ID, userId);
+        rc.set(USER_TOKENS.BANK_ID, bankId);
+        rc.set(USER_TOKENS.TOKEN, token);
+
+        return rc;
     }
 }

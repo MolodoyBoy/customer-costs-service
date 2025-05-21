@@ -2,6 +2,7 @@ package com.oleg.customer.costs.user_management;
 
 import com.oleg.customer.costs.monobank.UserAccountsSource;
 import org.jooq.DSLContext;
+import org.jooq.Record;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,17 +20,21 @@ public class DbUserAccountSource implements UserAccountsSource {
 
     @Override
     public void addAccount(int userId, List<String> accountNumbers) {
-        var queries = accountNumbers.stream()
-            .map(accountNumber ->
-                dslContext.insertInto(MONOBANK_USER_ACCOUNTS)
-                    .values(MONOBANK_USER_ACCOUNTS.ACCOUNT_ID, accountNumber)
-                    .values(MONOBANK_USER_ACCOUNTS.USER_ID, userId)
-                    .onConflict(MONOBANK_USER_ACCOUNTS.ACCOUNT_ID)
-                    .doNothing()
-            )
+        var records = accountNumbers.stream()
+            .map(accountNumber -> toRecord(userId, accountNumber))
             .toList();
 
-        dslContext.batch(queries).execute();
+        dslContext.insertInto(MONOBANK_USER_ACCOUNTS)
+            .set(records)
+            .execute();
+    }
+
+    private Record toRecord(int userId, String accountNumber) {
+        Record newRecord = dslContext.newRecord(MONOBANK_USER_ACCOUNTS);
+        newRecord.set(MONOBANK_USER_ACCOUNTS.USER_ID, userId);
+        newRecord.set(MONOBANK_USER_ACCOUNTS.ACCOUNT_ID, accountNumber);
+
+        return newRecord;
     }
 
     @Override

@@ -17,8 +17,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class MonobankSubscriber implements BankSubscriber {
 
     private static final int BANK_ID = 1;
-    private static final Logger logger = getLogger(MonobankSubscriber.class);
-    private static final String webhookUrl = "https://oleg-customer-costs-service.herokuapp.com/monobank/webhook";
+    private static final Logger LOGGER = getLogger(MonobankSubscriber.class);
+    private static final String WEBHOOK_URL = "https://c9d6-109-227-102-98.ngrok-free.app/monobank/webhook";
 
     private final WebClient monobankWebClient;
     private final UserTokenSource userTokenSource;
@@ -55,11 +55,11 @@ public class MonobankSubscriber implements BankSubscriber {
             throw new IllegalArgumentException("User has not account for monobank!");
         }
 
-        logger.info("Accounts retrieved for user {}: {}", userId, accountIds);
+        LOGGER.info("Accounts retrieved for user {}: {}", userId, accountIds);
 
         userAccountsSource.addAccount(userId, accountIds);
 
-        Map<String, String> body = Map.of("webHookUrl", webhookUrl);
+        Map<String, String> body = Map.of("webHookUrl", WEBHOOK_URL);
         monobankWebClient.post()
             .uri("/personal/webhook")
             .bodyValue(body)
@@ -67,7 +67,7 @@ public class MonobankSubscriber implements BankSubscriber {
             .header("Content-Type", "application/json")
             .retrieve()
             .bodyToMono(Void.class)
-            .doOnSuccess(aVoid -> logger.info("Webhook successfully subscribed."))
+            .doOnSuccess(aVoid -> LOGGER.info("Webhook successfully subscribed."))
             .block();
     }
 }
