@@ -6,9 +6,6 @@ server:
 spring:
     ai:
         openai:
-            embedding:
-              options:
-                  model: 'text-embedding-3-small'
             api-key: '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'
     profiles:
         default: default
