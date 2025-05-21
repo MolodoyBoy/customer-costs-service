@@ -1,0 +1,1 @@
+ALTER TABLE customer_costs ADD COLUMN commission_rate NUMERIC NOT NULL DEFAULT 0.0;

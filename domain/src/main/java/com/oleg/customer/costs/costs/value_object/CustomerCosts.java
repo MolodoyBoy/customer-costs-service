@@ -9,4 +9,5 @@ public record CustomerCosts(int id,
                             int categoryId,
                             BigDecimal amount,
                             String description,
-                            LocalDateTime createdAt) {}
+                            LocalDateTime createdAt,
+                            BigDecimal commissionRate) {}

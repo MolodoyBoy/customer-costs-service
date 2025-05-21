@@ -21,9 +21,7 @@ import org.jooq.Stringly;
 import org.jooq.Table;
 import org.jooq.TableField;
 import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
-import org.jooq.impl.Internal;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
@@ -93,11 +91,6 @@ public class MonobankUserAccounts extends TableImpl<Record> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : Public.PUBLIC;
-    }
-
-    @Override
-    public UniqueKey<Record> getPrimaryKey() {
-        return Internal.createUniqueKey(MonobankUserAccounts.MONOBANK_USER_ACCOUNTS, DSL.name("monobank_user_accounts_pkey"), new TableField[] { MonobankUserAccounts.MONOBANK_USER_ACCOUNTS.ACCOUNT_ID }, true);
     }
 
     @Override

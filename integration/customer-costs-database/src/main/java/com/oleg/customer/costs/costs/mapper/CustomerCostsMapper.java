@@ -27,7 +27,8 @@ public class CustomerCostsMapper implements RecordMapper<Record, CustomerCosts>,
             rc.get(CUSTOMER_COSTS.CATEGORY_ID),
             rc.get(CUSTOMER_COSTS.AMOUNT),
             rc.get(CUSTOMER_COSTS.DESCRIPTION),
-            rc.get(CUSTOMER_COSTS.CREATED_AT)
+            rc.get(CUSTOMER_COSTS.CREATED_AT),
+            rc.get(CUSTOMER_COSTS.COMMISSION_RATE)
         );
     }
 
@@ -40,6 +41,7 @@ public class CustomerCostsMapper implements RecordMapper<Record, CustomerCosts>,
         rc.set(CUSTOMER_COSTS.CREATED_AT, value.createdAt());
         rc.set(CUSTOMER_COSTS.CATEGORY_ID, value.categoryId());
         rc.set(CUSTOMER_COSTS.DESCRIPTION, value.description());
+        rc.set(CUSTOMER_COSTS.COMMISSION_RATE, value.commissionRate());
 
         return rc;
     }

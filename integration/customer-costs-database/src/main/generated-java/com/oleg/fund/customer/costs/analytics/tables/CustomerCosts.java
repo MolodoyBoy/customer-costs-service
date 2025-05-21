@@ -87,6 +87,11 @@ public class CustomerCosts extends TableImpl<Record> {
      */
     public final TableField<Record, LocalDateTime> CREATED_AT = createField(DSL.name("created_at"), SQLDataType.LOCALDATETIME(6).nullable(false), this, "");
 
+    /**
+     * The column <code>public.customer_costs.commission_rate</code>.
+     */
+    public final TableField<Record, BigDecimal> COMMISSION_RATE = createField(DSL.name("commission_rate"), SQLDataType.NUMERIC.nullable(false).defaultValue(DSL.field(DSL.raw("0.0"), SQLDataType.NUMERIC)), this, "");
+
     private CustomerCosts(Name alias, Table<Record> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
     }

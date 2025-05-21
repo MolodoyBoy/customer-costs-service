@@ -8,6 +8,7 @@ public record CustomerCostsQuery(
     BigDecimal amount,
     String description,
     LocalDateTime createdAt,
-    String categoryDescription
+    String categoryDescription,
+    BigDecimal commissionRate
 ) {
 }

@@ -18,7 +18,8 @@ public class CustomerCostsQueryMapper implements RecordMapper<Record, CustomerCo
             rc.get(CUSTOMER_COSTS.AMOUNT),
             rc.get(CUSTOMER_COSTS.DESCRIPTION),
             rc.get(CUSTOMER_COSTS.CREATED_AT),
-            rc.get(COSTS_CATEGORY.DESCRIPTION)
+            rc.get(COSTS_CATEGORY.DESCRIPTION),
+            rc.get(CUSTOMER_COSTS.COMMISSION_RATE)
         );
     }
 }

@@ -63,7 +63,8 @@ public class CustomerCostsService {
             categoryId,
             cmd.amount(),
             cmd.description(),
-            cmd.createdAt()
+            cmd.createdAt(),
+            cmd.commissionRate()
         );
 
         manageCustomerCosts.save(List.of(categorizedCosts));

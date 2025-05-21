@@ -6,7 +6,6 @@ package com.oleg.fund.customer.costs.analytics;
 
 import com.oleg.fund.customer.costs.analytics.tables.Bank;
 import com.oleg.fund.customer.costs.analytics.tables.CostsCategory;
-import com.oleg.fund.customer.costs.analytics.tables.CostsCategoryEmbedding;
 import com.oleg.fund.customer.costs.analytics.tables.CustomerCosts;
 import com.oleg.fund.customer.costs.analytics.tables.CustomerCostsEvents;
 import com.oleg.fund.customer.costs.analytics.tables.MonobankUserAccounts;
@@ -31,11 +30,6 @@ public class Tables {
      * The table <code>public.costs_category</code>.
      */
     public static final CostsCategory COSTS_CATEGORY = CostsCategory.COSTS_CATEGORY;
-
-    /**
-     * The table <code>public.costs_category_embedding</code>.
-     */
-    public static final CostsCategoryEmbedding COSTS_CATEGORY_EMBEDDING = CostsCategoryEmbedding.COSTS_CATEGORY_EMBEDDING;
 
     /**
      * The table <code>public.customer_costs</code>.

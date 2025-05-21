@@ -122,7 +122,7 @@ export default function Home() {
             { addUserBank: dto },
             (err, _d, resp) => {
                 if (err && resp?.status === 400) {
-                    setErrorMessage(resp.body?.message || 'Не удалось добавить банк.');
+                    setErrorMessage(resp.body?.message);
                 } else {
                     loadUserBanks();
                 }
@@ -195,7 +195,7 @@ export default function Home() {
                     )}
                     <div className="card shadow-sm">
                         <div className="card-body">
-                            <h2 className="card-title h5">Доступные банки</h2>
+                            <h2 className="card-title h5">Available banks</h2>
                             <div className="input-group mt-3">
                                 <select
                                     className="form-select"
@@ -209,7 +209,7 @@ export default function Home() {
                                     ))}
                                 </select>
                                 <button className="btn btn-primary" onClick={openTokenModal}>
-                                    Добавить
+                                    Add
                                 </button>
                             </div>
                         </div>
@@ -218,7 +218,7 @@ export default function Home() {
                 <div className="col-md-6 mb-3">
                     <div className="card shadow-sm">
                         <div className="card-body">
-                            <h2 className="card-title h5">Выбранные банки</h2>
+                            <h2 className="card-title h5">Selected banks</h2>
                             {userBanks.length > 0 ? (
                                 <div className="input-group mt-3">
                                     <select
@@ -237,7 +237,7 @@ export default function Home() {
                                     </select>
                                 </div>
                             ) : (
-                                <p className="text-muted mt-3">Пока нет добавленных банков.</p>
+                                <p className="text-muted mt-3">There are no banks added yet.</p>
                             )}
                         </div>
                     </div>
@@ -249,22 +249,22 @@ export default function Home() {
                 <div className="col-md-6 mb-3">
                     <div className="card shadow-sm">
                         <div className="card-body">
-                            <h2 className="card-title h5">Лимит на месяц</h2>
+                            <h2 className="card-title h5">Monthly limit</h2>
                             {limit != null ? (
                                 <p className="display-6">{limit}</p>
                             ) : (
-                                <p className="text-muted">Лимит не установлен</p>
+                                <p className="text-muted">No limit set</p>
                             )}
                             <div className="input-group mt-3">
                                 <input
                                     type="number"
                                     className="form-control"
-                                    placeholder="Введите новый лимит"
+                                    placeholder="Enter a new limit"
                                     value={newLimit}
                                     onChange={e => setNewLimit(e.target.value)}
                                 />
                                 <button className="btn btn-primary" onClick={handleSetLimit}>
-                                    Установить
+                                    Set limit
                                 </button>
                             </div>
                         </div>
@@ -273,7 +273,7 @@ export default function Home() {
                 <div className="col-md-6 mb-3">
                     <div className="card shadow-sm">
                         <div className="card-body">
-                            <h2 className="card-title h5">Текущая сумма</h2>
+                            <h2 className="card-title h5">Current amount</h2>
                             {current != null ? (
                                 <p
                                     className="display-6"
@@ -293,22 +293,23 @@ export default function Home() {
             <div className="card shadow-sm mb-4">
                 <div className="card-body">
                     <div className="d-flex justify-content-between align-items-center mb-3">
-                        <h2 className="card-title h5 mb-0">Транзакции</h2>
+                        <h2 className="card-title h5 mb-0">Transactions</h2>
                         <button
                             className="btn btn-success"
                             onClick={() => (window.location.href = '/analytics')}
                         >
-                            Аналитика
+                            Analytics
                         </button>
                     </div>
                     <div className="table-responsive">
                         <table className="table table-striped mb-3">
                             <thead>
                             <tr>
-                                <th>Дата</th>
-                                <th>Описание</th>
-                                <th>Сумма</th>
-                                <th>Категория</th>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Category</th>
+                                <th>Commission</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -319,12 +320,13 @@ export default function Home() {
                                         <td>{c.description}</td>
                                         <td>{c.amount}</td>
                                         <td>{c.categoryDescription}</td>
+                                        <td>{c.commissionRate}</td>
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
                                     <td colSpan="4" className="text-center text-muted">
-                                        Нет транзакций
+                                        No transactions
                                     </td>
                                 </tr>
                             )}
@@ -362,7 +364,7 @@ export default function Home() {
                     style={{ background: 'rgba(0,0,0,0.5)', zIndex: 20 }}
                 >
                     <div className="card p-4" style={{ maxWidth: '400px', width: '100%' }}>
-                        <h5 className="mb-3">Введите токен для банка</h5>
+                        <h5 className="mb-3">Enter a token for the bank</h5>
                         <input
                             type="text"
                             className="form-control mb-3"

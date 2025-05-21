@@ -6,7 +6,6 @@ package com.oleg.fund.customer.costs.analytics;
 
 import com.oleg.fund.customer.costs.analytics.tables.Bank;
 import com.oleg.fund.customer.costs.analytics.tables.CostsCategory;
-import com.oleg.fund.customer.costs.analytics.tables.CostsCategoryEmbedding;
 import com.oleg.fund.customer.costs.analytics.tables.CustomerCosts;
 import com.oleg.fund.customer.costs.analytics.tables.CustomerCostsEvents;
 import com.oleg.fund.customer.costs.analytics.tables.MonobankUserAccounts;
@@ -45,11 +44,6 @@ public class Public extends SchemaImpl {
      * The table <code>public.costs_category</code>.
      */
     public final CostsCategory COSTS_CATEGORY = CostsCategory.COSTS_CATEGORY;
-
-    /**
-     * The table <code>public.costs_category_embedding</code>.
-     */
-    public final CostsCategoryEmbedding COSTS_CATEGORY_EMBEDDING = CostsCategoryEmbedding.COSTS_CATEGORY_EMBEDDING;
 
     /**
      * The table <code>public.customer_costs</code>.
@@ -104,7 +98,6 @@ public class Public extends SchemaImpl {
         return Arrays.asList(
             Bank.BANK,
             CostsCategory.COSTS_CATEGORY,
-            CostsCategoryEmbedding.COSTS_CATEGORY_EMBEDDING,
             CustomerCosts.CUSTOMER_COSTS,
             CustomerCostsEvents.CUSTOMER_COSTS_EVENTS,
             MonobankUserAccounts.MONOBANK_USER_ACCOUNTS,

@@ -12,9 +12,13 @@ properties:
         type: string
     categoryDescription:
         type: string
+    commissionRate:
+        type: number
+        format: numeric
 required:
     - id
     - amount
     - createdAt
     - description
     - categoryDescription
+    - commissionRate

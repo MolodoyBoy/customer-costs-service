@@ -74,7 +74,8 @@ public class PrivatBankCustomerCostsSource  {
                         categoryId,
                         amount,
                         description,
-                        dateTime
+                        dateTime,
+                        BigDecimal.TEN
                     )
                 );
             }

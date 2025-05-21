@@ -63,7 +63,8 @@ public class MonobankController {
             accountId,
             convert(statementItem.getAmount()),
             statementItem.getDescription(),
-            LocalDateTime.ofInstant(statementItem.getTime(), ZoneId.systemDefault())
+            LocalDateTime.ofInstant(statementItem.getTime(), ZoneId.systemDefault()),
+            convert(statementItem.getCommissionRate())
         );
     }
 

@@ -9,5 +9,6 @@ public record CreateCustomerCostsCmd(
     String accountId,
     BigDecimal amount,
     String description,
-    LocalDateTime createdAt
+    LocalDateTime createdAt,
+    BigDecimal commissionRate
 ) {}

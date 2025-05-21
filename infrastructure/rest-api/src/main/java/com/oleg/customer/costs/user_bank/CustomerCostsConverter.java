@@ -23,6 +23,7 @@ public class CustomerCostsConverter {
             .amount(customerCosts.amount())
             .createdAt(customerCosts.createdAt().atOffset(UTC))
             .description(customerCosts.description())
-            .categoryDescription(customerCosts.categoryDescription());
+            .categoryDescription(customerCosts.categoryDescription())
+            .commissionRate(customerCosts.commissionRate());
     }
 }
