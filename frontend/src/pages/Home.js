@@ -143,8 +143,8 @@ export default function Home() {
             { updateSpending: update },
             (err, _d, resp) => {
                 if (err) {
-                    if (resp?.status === 403) {
-                        setErrorMessage(resp.body?.message || 'Доступ запрещён');
+                    if (resp?.status === 400) {
+                        setErrorMessage(resp.body?.message);
                     }
                 } else {
                     // refresh spending data
