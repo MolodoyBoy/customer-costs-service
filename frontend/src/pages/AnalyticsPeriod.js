@@ -25,11 +25,16 @@ ChartJS.register(
 );
 
 export default function AnalyticsPage() {
-    const [periods, setPeriods] = useState([]);              // все периоды
-    const [currentIdx, setCurrentIdx] = useState(0);         // индекс выбранного
-    const [currentLabel, setCurrentLabel] = useState('');    // отображаемый месяц+год
+    const [periods, setPeriods] = useState([]);
+    const [currentIdx, setCurrentIdx] = useState(0);
 
-    // при монтировании загружаем доступные периоды
+    const [currentLabel, setCurrentLabel] = useState('');
+    const [chartData, setChartData] = useState({ labels: [], datasets: [] });
+    const [summary, setSummary] = useState({
+        amount: null,
+        difference: null
+    });
+
     useEffect(() => {
         const token = getAuthToken();
         if (token) {
@@ -41,60 +46,70 @@ export default function AnalyticsPage() {
 
         new PeriodCostsAnalyticsApi().getAnalyticsPeriods((err, data) => {
             if (!err && Array.isArray(data.values) && data.values.length) {
-                const vals = data.values;
-                setPeriods(vals);
-                setCurrentIdx(vals.length - 1); // по умолчанию последний
+                setPeriods(data.values);
+                setCurrentIdx(data.values.length - 1);
             }
         });
     }, []);
 
-    // обновляем label при изменении currentIdx или periods
     useEffect(() => {
-        if (periods.length && currentIdx >= 0 && currentIdx < periods.length) {
-            const { period } = periods[currentIdx];
-            const dt = new Date(period);
-            const month = dt.toLocaleString('default', { month: 'long' });
-            const year = dt.getFullYear();
-            setCurrentLabel(`${month} ${year}`);
-            // TODO: здесь можно вызвать метод для получения данных по periods[currentIdx].periodCostsAnalyticId
-        }
+        if (!periods.length) return;
+
+        const { period, periodCostsAnalyticId } = periods[currentIdx];
+        const dt = new Date(period);
+        const month = dt.toLocaleString('default', { month: 'long' });
+        const year = dt.getFullYear();
+        setCurrentLabel(`${month} ${year}`);
+
+        // fetch analytics for this period, limit=5
+        new PeriodCostsAnalyticsApi().getPeriodCostsAnalytics(
+            periodCostsAnalyticId,
+            { limit: 5 },
+            (err, resp) => {
+                if (err) return;
+                const { customerCosts, periodCostsAnalytics } = resp;
+
+                // build chart data from customerCosts
+                const labels = customerCosts.map(c =>
+                    new Date(c.createdAt).toLocaleDateString()
+                );
+                const dataPoints = customerCosts.map(c => c.amount);
+                setChartData({
+                    labels,
+                    datasets: [
+                        {
+                            label: 'Daily Expenses',
+                            data: dataPoints,
+                            fill: false,
+                            tension: 0.4,
+                            borderWidth: 3
+                        }
+                    ]
+                });
+
+                // summary
+                setSummary({
+                    amount: periodCostsAnalytics.amount,
+                    difference: periodCostsAnalytics.differenceFromPrevious
+                });
+            }
+        );
     }, [periods, currentIdx]);
 
-    const prevPeriod = () => {
-        setCurrentIdx(idx => Math.max(0, idx - 1));
-    };
-    const nextPeriod = () => {
-        setCurrentIdx(idx => Math.min(periods.length - 1, idx + 1));
-    };
+    const prevPeriod = () => setCurrentIdx(idx => Math.max(0, idx - 1));
+    const nextPeriod = () => setCurrentIdx(idx => Math.min(periods.length - 1, idx + 1));
 
-    // метки дней
-    const labels = Array.from({ length: 31 }, (_, i) => `${i + 1}`);
-
-    // тестовые данные (подменить на реальные по periodCostsAnalyticId)
-    const data = {
-        labels,
-        datasets: [
-            {
-                label: 'Daily Expenses',
-                data: labels.map(() => (Math.random() * 20000 + 5000).toFixed(2)),
-                fill: false,
-                tension: 0.4,
-                borderWidth: 3,
-            }
-        ]
-    };
+    const totalCount = chartData.labels.length;
+    const labels = chartData.labels;
+    const data = chartData;
 
     const options = {
         scales: {
             y: {
-                ticks: {
-                    callback: v => `${(v / 1000).toFixed(1)}K`
-                },
+                ticks: { callback: v => `${(v / 1000).toFixed(1)}K` },
                 title: { display: true, text: 'Expenses (thousands)' }
             },
-            x: {
-                title: { display: true, text: 'Day of Month' }
-            }
+            x: { title: { display: true, text: 'Date' } }
         },
         plugins: {
             legend: { display: false },
@@ -104,7 +119,7 @@ export default function AnalyticsPage() {
                 }
             }
         },
-        maintainAspectRatio: false,
+        maintainAspectRatio: false
     };
 
     return (
@@ -123,7 +138,12 @@ export default function AnalyticsPage() {
                             <Button variant="outline-secondary" size="sm" className="mx-2" disabled>
                                 {currentLabel}
                             </Button>
-                            <Button variant="light" size="sm" onClick={nextPeriod} disabled={currentIdx === periods.length - 1}>
+                            <Button
+                                variant="light"
+                                size="sm"
+                                onClick={nextPeriod}
+                                disabled={currentIdx === periods.length - 1}
+                            >
                                 &gt;
                             </Button>
                         </div>
@@ -136,10 +156,18 @@ export default function AnalyticsPage() {
                 <Col lg={4}>
                     <Card className="p-3 h-100 shadow-sm">
                         <h5 className="text-muted">Expenses in {currentLabel}</h5>
-                        <h2 className="my-3">−₴54,431.34</h2>
+                        <h2 className="my-3">
+                            {summary.amount != null
+                                ? `${summary.amount.toLocaleString()}₴`
+                                : '0₴'}
+                        </h2>
                         <div>
                             <small className="text-muted">Less than previous</small>
-                            <div>₴31,717.32</div>
+                            <div>
+                                {summary.difference != null
+                                    ? `${summary.difference.toLocaleString()}₴`
+                                    : '0₴'}
+                            </div>
                         </div>
                     </Card>
                 </Col>
@@ -154,7 +182,6 @@ export default function AnalyticsPage() {
 
             {/* Categories Tables */}
             <Row>
-                {/* Expense Categories */}
                 <Col md={6} className="mb-4">
                     <Card className="shadow-sm">
                         <Card.Header as="h5" className="d-flex justify-content-between align-items-center">
@@ -175,7 +202,7 @@ export default function AnalyticsPage() {
                                     { name: 'Transfers', tx: 4, amount: -21105 },
                                     { name: 'Digital Goods', tx: 5, amount: -7679 },
                                     { name: 'Online Stores', tx: 1, amount: -7177 },
-                                    { name: 'Taxi', tx: 37, amount: -5554 },
+                                    { name: 'Taxi', tx: 37, amount: -5554 }
                                 ].map((row, i) => (
                                     <tr key={i}>
                                         <td>{row.name}</td>
@@ -189,7 +216,6 @@ export default function AnalyticsPage() {
                     </Card>
                 </Col>
 
-                {/* Income Categories */}
                 <Col md={6} className="mb-4">
                     <Card className="shadow-sm">
                         <Card.Header as="h5" className="d-flex justify-content-between align-items-center">
@@ -198,7 +224,7 @@ export default function AnalyticsPage() {
                         </Card.Header>
                         <Card.Body className="text-center py-5">
                             <div className="mb-3">
-                                <i className="bi bi-box-seam" style={{ fontSize: '3rem', color: '#ccc' }}></i>
+                                <i className="bi bi-box-seam" style={{ fontSize: '3rem', color: '#ccc' }} />
                             </div>
                             <div className="text-muted">No income for this period</div>
                         </Card.Body>
@@ -208,3 +234,4 @@ export default function AnalyticsPage() {
         </Container>
     );
 }
+
