@@ -316,7 +316,7 @@ export default function Home() {
                             {costs.length > 0 ? (
                                 costs.map(c => (
                                     <tr key={c.id}>
-                                        <td>{new Date(c.createdAt).toLocaleDateString()}</td>
+                                        <td>{new Date(c.createdAt).toLocaleString()}</td>
                                         <td>{c.description}</td>
                                         <td>{c.amount}</td>
                                         <td>{c.categoryDescription}</td>
