@@ -87,6 +87,7 @@ public class CustomerCostsService {
         return customerCosts.stream()
             .filter(this::dateFilter)
             .map(CustomerCosts::amount)
+            .map(BigDecimal::abs)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
