@@ -83,6 +83,8 @@ class DbPeriodCostsAnalyticsSource implements AdminPeriodCostsAnalyticsSource, G
                 PeriodCostsAnalyticsSnapshot snapshot = ca.toSnapshot();
                 return dslContext.update(PERIOD_COSTS_ANALYTICS)
                     .set(PERIOD_COSTS_ANALYTICS.AMOUNT, snapshot.amount())
+                    .set(PERIOD_COSTS_ANALYTICS.AVERAGE, snapshot.average())
+                    .set(PERIOD_COSTS_ANALYTICS.TOTAL_TRANSACTIONS, snapshot.totalTransactions())
                     .set(PERIOD_COSTS_ANALYTICS.DIFFERENCE_FROM_PREVIOUS_MONTH, snapshot.differenceFromPrevious())
                     .where(PERIOD_COSTS_ANALYTICS.ID.eq(snapshot.id()));
             })

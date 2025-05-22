@@ -40,7 +40,9 @@ public class PeriodCostsAnalytics {
     public void addCustomerCosts(CustomerCosts customerCosts) {
         if (customerCosts == null) return;
 
+        if (totalTransactions == null) totalTransactions = 0;
         totalTransactions += 1;
+
         BigDecimal amount = customerCosts.amount();
         if (this.amount == null) {
             this.amount = amount;
@@ -54,7 +56,7 @@ public class PeriodCostsAnalytics {
             differenceFromPrevious = differenceFromPrevious.add(amount);
         }
 
-        average = amount.divide(BigDecimal.valueOf(totalTransactions), 2, HALF_UP);
+        average = this.amount.divide(BigDecimal.valueOf(totalTransactions), 2, HALF_UP);
         customerCosts.linkToPeriodCostsAnalyticsId(id);
     }
 
