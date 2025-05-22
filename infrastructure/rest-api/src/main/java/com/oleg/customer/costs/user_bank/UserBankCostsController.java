@@ -28,8 +28,8 @@ public class UserBankCostsController implements UserBankCostsApi {
     }
 
     @Override
-    public UserBankCostsListDto getUserBankCosts(Integer bankId, Integer page) {
-        List<CustomerCostsQuery> customerCosts = customerCostsService.getCustomerCosts(bankId, new Paginator(page));
+    public UserBankCostsListDto getUserBankCosts(Integer bankId, Integer page, Integer pageSize) {
+        List<CustomerCostsQuery> customerCosts = customerCostsService.getCustomerCosts(bankId, new Paginator(page, pageSize));
         return new UserBankCostsListDto().values(customerCostsConverter.convert(customerCosts));
     }
 

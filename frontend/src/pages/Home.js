@@ -13,7 +13,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
 import { getAuthToken } from '../auth';
 
-const PAGE_SIZE = 25;
+const PAGE_SIZE = 10;
 const API_BASE = process.env.REACT_APP_API_BASE_URL;
 ApiClient.instance.basePath = API_BASE;
 
@@ -72,7 +72,7 @@ export default function Home() {
         new UserBankCostsApi().getUserBankCostsCount(bankId, (err, data) => {
             if (!err) setTotalCount(data.count);
         });
-        new UserBankCostsApi().getUserBankCosts(bankId, page, (err, data) => {
+        new UserBankCostsApi().getUserBankCosts(bankId, page, PAGE_SIZE, (err, data) => {
             if (!err) setCosts(Array.isArray(data.values) ? data.values : []);
         });
 
