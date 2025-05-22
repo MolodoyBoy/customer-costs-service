@@ -1,0 +1,36 @@
+get:
+    tags: [ "categorized-costs-analytics" ]
+    operationId: "getCategorizedCostsAnalytics"
+    parameters:
+        -   name: id
+            in: path
+            required: true
+            schema:
+                type: integer
+        -   name: page
+            in: query
+            schema:
+                type: integer
+        -   name: pageSize
+            in: query
+            schema:
+                type: integer
+    responses:
+        '200':
+            description: OK
+            content:
+                application/json:
+                    schema:
+                        $ref: '../../components/category/CategorizedCostsAnalyticsResponse.yaml'
+        '403':
+            description: Not Authorized
+            content:
+                application/json:
+                    schema:
+                        $ref: '../../components/error/Error.yaml'
+        '404':
+            description: Not Found
+            content:
+                application/json:
+                    schema:
+                        $ref: '../../components/error/Error.yaml'

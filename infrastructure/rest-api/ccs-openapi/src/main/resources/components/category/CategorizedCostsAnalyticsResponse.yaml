@@ -1,0 +1,12 @@
+type: object
+properties:
+    customerCosts:
+        type: array
+        items:
+            $ref: '../costs/CustomerCosts.yaml'
+    categorizedCostsAnalytics:
+        $ref: 'CategorizedCostsAnalytics.yaml'
+required:
+    - customerCosts
+    - categorizedCostsAnalytics
+

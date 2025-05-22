@@ -1,0 +1,34 @@
+/* Shift the month-switcher closer to the title */
+.month-switcher {
+    margin-left: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* Page background */
+body, .bg-light {
+    background-color: #f8f9fa !important;
+}
+
+/* Indigo accent for the chart icon */
+.text-indigo {
+    color: #4f46e5 !important;
+}
+
+/* Semibold button label for the current-month button */
+.fw-semibold {
+    font-weight: 600 !important;
+}
+
+/* Card overrides: remove default border, add rounding and subtle shadow */
+.card {
+    border: none;
+    border-radius: 0.75rem;
+    /* Bootstrap’s default shadow-sm is fine, but you can bump it here if desired */
+}
+
+/* Danger-red text for negative amounts */
+.text-danger {
+    color: #dc3545 !important;
+}

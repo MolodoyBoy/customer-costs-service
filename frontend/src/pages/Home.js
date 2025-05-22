@@ -296,7 +296,7 @@ export default function Home() {
                         <h2 className="card-title h5 mb-0">Transactions</h2>
                         <button
                             className="btn btn-success"
-                            onClick={() => (window.location.href = '/analytics')}
+                            onClick={() => (window.location.href = '/analytics/period')}
                         >
                             Analytics
                         </button>

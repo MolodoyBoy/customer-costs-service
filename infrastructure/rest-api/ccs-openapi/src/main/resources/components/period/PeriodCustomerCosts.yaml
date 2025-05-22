@@ -1,0 +1,11 @@
+type: object
+properties:
+    amount:
+        type: number
+        format: double
+    createdAt:
+        type: string
+        format: date
+required:
+    - amount
+    - createdAt

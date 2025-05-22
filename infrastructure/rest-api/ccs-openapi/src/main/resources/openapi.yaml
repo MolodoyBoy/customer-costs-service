@@ -29,3 +29,11 @@ paths:
         $ref: 'paths/user/management/login.yaml'
     /user/management/registration:
         $ref: 'paths/user/management/registration.yaml'
+
+    ## Analytics
+    /analytics/periods:
+        $ref: 'paths/period/analytics_periods.yaml'
+    /period/{id}/costs/analytics/:
+        $ref: 'paths/period/period_analytics.yaml'
+    /categorized/{id}/costs/analytics/:
+        $ref: 'paths/category/categorized_analytics.yaml'

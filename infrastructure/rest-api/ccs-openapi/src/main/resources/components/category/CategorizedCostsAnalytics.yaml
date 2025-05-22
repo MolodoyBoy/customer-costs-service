@@ -1,0 +1,20 @@
+type: object
+properties:
+    id:
+        type: integer
+    amount:
+        type: number
+        format: double
+    percent:
+        type: number
+        format: double
+    transactionsCount:
+        type: integer
+    categoryDescription:
+        type: string
+required:
+    - id
+    - amount
+    - percent
+    - transactionsCount
+    - categoryDescription

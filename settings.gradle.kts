@@ -1,16 +1,6 @@
 pluginManagement {
     repositories {
         mavenCentral()
-        maven {
-            url = uri("https://repo.spring.io/milestone")
-        }
-        maven {
-            url = uri("https://repo.spring.io/snapshot")
-        }
-        maven {
-            name = "Central Portal Snapshots"
-            url = uri("https://central.sonatype.com/repository/maven-snapshots/")
-        }
         gradlePluginPortal()
     }
 
@@ -134,3 +124,8 @@ include("integration:customer-costs-kafka")
 include("integration:customer-costs-database")
 include("infrastructure:rest-api:ccs-openapi")
 include("integration:monobank")
+include("customer-costs-analytics")
+include("analytics-reload")
+include("analytics-domain")
+include("integration:customer-costs-analytics-database")
+include("integration:db-generated")

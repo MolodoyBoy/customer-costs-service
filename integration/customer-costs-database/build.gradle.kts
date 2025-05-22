@@ -30,6 +30,7 @@ buildscript {
 dependencies {
     implementation(project(":domain"))
     implementation(project(":reload"))
+    implementation(project(":integration:db-generated"))
     implementation(project(":infrastructure:security"))
 
     implementation(libs.flywayCore)

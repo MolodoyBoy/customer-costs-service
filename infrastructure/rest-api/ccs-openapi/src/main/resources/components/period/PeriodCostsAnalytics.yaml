@@ -1,0 +1,18 @@
+type: object
+properties:
+    id:
+        type: integer
+    period:
+        type: string
+        format: date
+    amount:
+        type: number
+        format: double
+    differenceFromPrevious:
+        type: number
+        format: double
+required:
+    - id
+    - period
+    - amount
+    - differenceFromPrevious

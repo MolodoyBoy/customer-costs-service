@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     implementation(project(":domain"))
+    implementation(project(":analytics-domain"))
     implementation(project(":infrastructure:security"))
     implementation(project(":infrastructure:rest-api:ccs-openapi"))
 

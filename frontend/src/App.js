@@ -7,6 +7,7 @@ import { PublicRoute } from './components/PublicRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
+import AnalyticsPeriod from './pages/AnalyticsPeriod';
 import {isLoggedIn} from "./auth";
 
 export default function App() {
@@ -35,6 +36,15 @@ export default function App() {
                     element={
                         <PrivateRoute>
                             <Home />
+                        </PrivateRoute>
+                    }
+                />
+
+                <Route
+                    path="/analytics/period"
+                    element={
+                        <PrivateRoute>
+                            <AnalyticsPeriod />
                         </PrivateRoute>
                     }
                 />

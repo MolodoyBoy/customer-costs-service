@@ -1,0 +1,8 @@
+type: object
+properties:
+    values:
+        type: array
+        items:
+            $ref: 'AnalyticPeriod.yaml'
+required:
+    - values

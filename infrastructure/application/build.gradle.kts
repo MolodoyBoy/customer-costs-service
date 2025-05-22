@@ -14,6 +14,8 @@ springBoot {
 dependencies {
     implementation(project(":domain"))
     implementation(project(":reload"))
+    implementation(project(":analytics-domain"))
+    implementation(project(":analytics-reload"))
     implementation(project(":integration:chatGPT"))
     implementation(project(":integration:monobank"))
     implementation(project(":infrastructure:security"))
@@ -21,6 +23,7 @@ dependencies {
     implementation(project(":integration:customer-costs-kafka"))
     implementation(project(":infrastructure:rest-api:ccs-openapi"))
     implementation(project(":integration:customer-costs-database"))
+    implementation(project(":integration:customer-costs-analytics-database"))
 
     implementation(libs.chatGPT)
     implementation(libs.springKafka)

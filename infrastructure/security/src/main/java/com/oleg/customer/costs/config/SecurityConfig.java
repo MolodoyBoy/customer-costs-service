@@ -5,6 +5,7 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.proc.SecurityContext;
+import com.oleg.customer.costs.analytics.user.AnalyticsUserContext;
 import com.oleg.customer.costs.user_management.UserContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -46,10 +47,22 @@ public class SecurityConfig {
 
     @Bean
     @RequestScope
-    public UserContext userInfo() {
+    public UserContext userContext() {
         var auth = getContext().getAuthentication();
         if (auth instanceof JwtAuthenticationToken jwtAuth) {
             return (UserContext) jwtAuth.getDetails();
+        } else {
+            throw new BadCredentialsException("Token not found!");
+        }
+    }
+
+    @Bean
+    @RequestScope
+    public AnalyticsUserContext analyticsUserContext() {
+        var auth = getContext().getAuthentication();
+        if (auth instanceof JwtAuthenticationToken jwtAuth) {
+            UserContext details = (UserContext) jwtAuth.getDetails();
+            return new AnalyticsUserContext(details.id(), details.username());
         } else {
             throw new BadCredentialsException("Token not found!");
         }

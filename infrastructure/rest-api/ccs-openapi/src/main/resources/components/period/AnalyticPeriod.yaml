@@ -1,0 +1,10 @@
+type: object
+properties:
+    period:
+        type: string
+        format: date
+    periodCostsAnalyticId:
+        type: integer
+required:
+    - period
+    - periodCostsAnalyticId
