@@ -10,5 +10,5 @@ public interface GetCategorizedCostsAnalyticsSource {
 
     CategorizedCostsAnalyticsSnapshot get(int id, Set<CategorizedCostsAnalyticsColumn> columns);
 
-    List<CategorizedCostsAnalyticsSnapshot> getForPeriod(int limit, int periodCostsAnalyticsId, Set<CategorizedCostsAnalyticsColumn> columns);
+    List<CategorizedCostsAnalyticsSnapshot> getForPeriod(Integer limit, int periodCostsAnalyticsId, Set<CategorizedCostsAnalyticsColumn> columns);
 }

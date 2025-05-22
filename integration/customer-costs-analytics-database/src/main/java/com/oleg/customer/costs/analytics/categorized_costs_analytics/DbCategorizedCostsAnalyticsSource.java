@@ -58,7 +58,7 @@ class DbCategorizedCostsAnalyticsSource implements AdminCategorizedCostsAnalytic
     }
 
     @Override
-    public List<CategorizedCostsAnalyticsSnapshot> getForPeriod(int limit, int periodCostsAnalyticsId, Set<CategorizedCostsAnalyticsColumn> columns) {
+    public List<CategorizedCostsAnalyticsSnapshot> getForPeriod(Integer limit, int periodCostsAnalyticsId, Set<CategorizedCostsAnalyticsColumn> columns) {
         Condition condition = CATEGORIZED_COSTS_ANALYTICS.PERIOD_COST_ANALYTICS_ID.eq(periodCostsAnalyticsId);
         return get(limit, condition, columns).toList();
     }

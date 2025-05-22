@@ -31,8 +31,6 @@ import static java.util.stream.Collectors.*;
 @Service
 public class PeriodCostsAnalyticsUseCase {
 
-    private static final int CATEGORIZED_COSTS_ANALYTICS_LIMIT = 5;
-
     private final AnalyticsUserContext analyticsUserContext;
     private final GetCustomerCosts getCustomerCosts;
     private final GetAnalyticPeriodSource getAnalyticPeriodSource;
@@ -65,10 +63,6 @@ public class PeriodCostsAnalyticsUseCase {
         var periodCostsAnalytics = getPeriodCostsAnalyticsSource.get(id);
         if (periodCostsAnalytics == null) {
             throw new NotFoundException("No period costs analytics found for id: " + id);
-        }
-
-        if (limit == null) {
-            limit = CATEGORIZED_COSTS_ANALYTICS_LIMIT;
         }
 
         var forPeriod = getCustomerCosts.getForPeriod(id);
