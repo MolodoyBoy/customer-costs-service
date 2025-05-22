@@ -12,8 +12,9 @@ import {
     Tooltip,
     Legend
 } from 'chart.js';
-import { ApiClient, PeriodCostsAnalytics, PeriodCostsAnalyticsApi } from 'ccs-openapi-client';
-import {getAuthToken} from "../auth";
+import { ApiClient, PeriodCostsAnalyticsApi } from 'ccs-openapi-client';
+import { getAuthToken } from '../auth';
+import './AnalyticsPage.css';
 
 ChartJS.register(
     LineElement,
@@ -25,12 +26,14 @@ ChartJS.register(
 );
 
 export default function AnalyticsPage() {
-    const [periods, setPeriods] = useState([]);
-    const [currentIdx, setCurrentIdx] = useState(0);
+    const [periods, setPeriods]           = useState([]);
+    const [currentIdx, setCurrentIdx]     = useState(0);
     const [currentLabel, setCurrentLabel] = useState('');
-    const [chartData, setChartData] = useState({ labels: [], datasets: [] });
-    const [summary, setSummary] = useState({ amount: 0, difference: 0 });
+    const [chartData, setChartData]       = useState({ labels: [], datasets: [] });
+    const [summary, setSummary]           = useState({ amount: 0, average: 0, difference: 0 });
+    const [categories, setCategories]     = useState([]); // New
 
+    // load periods
     useEffect(() => {
         const token = getAuthToken();
         if (token) {
@@ -39,7 +42,6 @@ export default function AnalyticsPage() {
                 Authorization: token,
             };
         }
-
         new PeriodCostsAnalyticsApi().getAnalyticsPeriods((err, data) => {
             if (!err && Array.isArray(data.values) && data.values.length) {
                 setPeriods(data.values);
@@ -48,12 +50,13 @@ export default function AnalyticsPage() {
         });
     }, []);
 
+    // load analytics for selected period
     useEffect(() => {
         if (!periods.length) return;
         const { period, periodCostsAnalyticId } = periods[currentIdx];
-        const dt = new Date(period);
+        const dt    = new Date(period);
         const month = dt.toLocaleString('default', { month: 'long' });
-        const year = dt.getFullYear();
+        const year  = dt.getFullYear();
         setCurrentLabel(`${month} ${year}`);
 
         new PeriodCostsAnalyticsApi().getPeriodCostsAnalytics(
@@ -61,30 +64,31 @@ export default function AnalyticsPage() {
             { limit: 5 },
             (err, resp) => {
                 if (err) return;
-                const { customerCosts, periodCostsAnalytics } = resp;
-                // Chart
-                const labels = customerCosts.map(c =>
-                    new Date(c.createdAt).toLocaleDateString()
-                );
-                const dataPoints = customerCosts.map(c => c.amount);
+                const { customerCosts, periodCostsAnalytics, categorizedCostsAnalytics } = resp;
+
+                // chart
+                const labels    = customerCosts.map(c => new Date(c.createdAt).toLocaleDateString());
+                const dataPts   = customerCosts.map(c => c.amount);
                 setChartData({
                     labels,
-                    datasets: [
-                        {
-                            label: 'Daily Expenses',
-                            data: dataPoints,
-                            fill: false,
-                            tension: 0.4,
-                            borderWidth: 3
-                        }
-                    ]
+                    datasets: [{
+                        label: 'Daily Expenses',
+                        data: dataPts,
+                        fill: false,
+                        tension: 0.4,
+                        borderWidth: 3
+                    }]
                 });
-                // Summary
+
+                // summary
                 setSummary({
                     amount: periodCostsAnalytics.amount,
                     average: periodCostsAnalytics.average,
                     difference: periodCostsAnalytics.differenceFromPrevious
                 });
+
+                // categories
+                setCategories(categorizedCostsAnalytics);
             }
         );
     }, [periods, currentIdx]);
@@ -95,17 +99,26 @@ export default function AnalyticsPage() {
     const options = {
         scales: {
             y: {
-                ticks: { callback: v => `${(v / 1000).toFixed(1)}K` },
-                title: { display: true, text: 'Expenses (thousands)' }
+                ticks:    { callback: v => `${(v / 1000).toFixed(1)}K` },
+                title:    { display: true, text: 'Expenses (thousands)' },
+                grid:     { color: '#e9ecef' }
             },
-            x: { title: { display: true, text: 'Day of Month' } }
+            x: {
+                title: { display: true, text: 'Day of Month' },
+                grid:  { display: false }
+            }
         },
         plugins: {
             legend: { display: false },
             tooltip: {
                 callbacks: {
                     label: ctx => `₴${Number(ctx.parsed.y).toLocaleString()}`
-                }
+                },
+                backgroundColor: 'rgba(0,0,0,0.7)',
+                titleFont:       { size: 14 },
+                bodyFont:        { size: 12 },
+                cornerRadius:     4,
+                padding:          8
             }
         },
         maintainAspectRatio: false
@@ -231,10 +244,9 @@ export default function AnalyticsPage() {
                             </Card.Body>
                         </Card>
                     </Col>
-
                 </Row>
 
-
+                {/* Expense Categories */}
                 <Row>
                     <Col md={6} className="mb-4">
                         <Card className="shadow-sm">
@@ -242,33 +254,37 @@ export default function AnalyticsPage() {
                                 Expense Categories
                                 <Button variant="success">More ➔</Button>
                             </Card.Header>
-                            <Card.Body className="p-0">
-                                <Table hover className="mb-0">
+                            <Card.Body>
+                                <Table hover striped className="mb-0">
                                     <thead className="table-light">
                                     <tr>
                                         <th>Category</th>
                                         <th>Transactions</th>
-                                        <th>Amount</th>
+                                        <th className="text-end">Amount</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {[
-                                        {name: 'Transfers', tx: 4, amount: -21105},
-                                        {name: 'Digital Goods', tx: 5, amount: -7679},
-                                        {name: 'Online Stores', tx: 1, amount: -7177},
-                                        {name: 'Taxi', tx: 37, amount: -5554}
-                                    ].map((row, i) => (
-                                        <tr key={i}>
-                                            <td>{row.name}</td>
-                                            <td>{row.tx}</td>
-                                            <td className="text-end">₴{Math.abs(row.amount).toLocaleString()}</td>
+                                    {categories.length > 0 ? (
+                                        categories.map(cat => (
+                                            <tr key={cat.id}>
+                                                <td>{cat.categoryDescription}</td>
+                                                <td>{cat.transactionsCount}</td>
+                                                <td className="text-end">₴{cat.amount.toLocaleString()}</td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan={3} className="text-center text-muted">
+                                                No categories
+                                            </td>
                                         </tr>
-                                    ))}
+                                    )}
                                     </tbody>
                                 </Table>
                             </Card.Body>
                         </Card>
                     </Col>
+
 
                     {/* Income Categories */}
                     <Col md={6} className="mb-4">
@@ -279,7 +295,7 @@ export default function AnalyticsPage() {
                             </Card.Header>
                             <Card.Body className="text-center py-5">
                                 <div className="mb-3">
-                                    <i className="bi bi-box-seam" style={{fontSize: '3rem', color: '#ccc'}}/>
+                                    <i className="bi bi-box-seam" style={{ fontSize: '3rem', color: '#ccc' }} />
                                 </div>
                                 <div className="text-muted">No income for this period</div>
                             </Card.Body>
@@ -287,6 +303,7 @@ export default function AnalyticsPage() {
                     </Col>
                 </Row>
             </Container>
+
             {/* Footer */}
             <footer className="mt-auto text-center py-3 bg-white border-top">
                 <small className="text-muted">
@@ -296,3 +313,4 @@ export default function AnalyticsPage() {
         </div>
     );
 }
+
