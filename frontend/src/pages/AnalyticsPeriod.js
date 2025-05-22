@@ -171,7 +171,7 @@ export default function AnalyticsPage() {
                                 <h5 style={{color: diffColor, margin: 0}}>{`${diffValue}₴`}</h5>
                             </div>
                             <div className="mt-4 d-flex justify-content-between align-items-center">
-                                <h5 className="text-muted mb-0 me-2">Average spending:</h5>
+                                <h5 className="text-muted mb-0 me-2">Average expenses:</h5>
                                 <h5 className="text-primary fw-semibold">{`${average}₴`}</h5>
                             </div>
                         </Card>
