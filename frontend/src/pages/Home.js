@@ -1,5 +1,5 @@
 // frontend/src/pages/Home.js
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     ApiClient,
     BanksApi,
@@ -11,32 +11,35 @@ import {
 } from 'ccs-openapi-client';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
-import { getAuthToken } from '../auth';
+import {getAuthToken, logout} from '../auth';
+import {useNavigate} from 'react-router-dom';
 
 const PAGE_SIZE = 10;
 const API_BASE = process.env.REACT_APP_API_BASE_URL;
 ApiClient.instance.basePath = API_BASE;
 
 export default function Home() {
-    const [supportedBanks, setSupportedBanks]         = useState([]);
-    const [selectedBankId, setSelectedBankId]         = useState('');
-    const [userBanks, setUserBanks]                   = useState([]);
+    const navigate = useNavigate();
+
+    const [supportedBanks, setSupportedBanks] = useState([]);
+    const [selectedBankId, setSelectedBankId] = useState('');
+    const [userBanks, setUserBanks] = useState([]);
     const [selectedUserBankId, setSelectedUserBankId] = useState('');
-    const [errorMessage, setErrorMessage]             = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
 
     // Transactions state
-    const [costs, setCosts]         = useState([]);
+    const [costs, setCosts] = useState([]);
     const [totalCount, setTotalCount] = useState(0);
-    const [page, setPage]           = useState(1);
+    const [page, setPage] = useState(1);
 
     // Spending state
-    const [limit, setLimit]         = useState(null);
-    const [current, setCurrent]     = useState(null);
-    const [newLimit, setNewLimit]   = useState('');
+    const [limit, setLimit] = useState(null);
+    const [current, setCurrent] = useState(null);
+    const [newLimit, setNewLimit] = useState('');
 
     // Modal state for token entry
     const [showTokenModal, setShowTokenModal] = useState(false);
-    const [bankToAddId, setBankToAddId]       = useState(null);
+    const [bankToAddId, setBankToAddId] = useState(null);
     const [userTokenInput, setUserTokenInput] = useState('');
 
     // Auto-hide errors
@@ -62,8 +65,12 @@ export default function Home() {
     // Reload costs, count, and spending when bank or page changes
     useEffect(() => {
         if (!selectedUserBankId) {
-            setCosts([]); setTotalCount(0); setPage(1);
-            setLimit(null); setCurrent(null); setNewLimit('');
+            setCosts([]);
+            setTotalCount(0);
+            setPage(1);
+            setLimit(null);
+            setCurrent(null);
+            setNewLimit('');
             return;
         }
         const bankId = parseInt(selectedUserBankId, 10);
@@ -119,7 +126,7 @@ export default function Home() {
         setErrorMessage(null);
         const dto = new AddUserBank(bankToAddId, userTokenInput);
         new UserBanksApi().addUserBank(
-            { addUserBank: dto },
+            {addUserBank: dto},
             (err, _d, resp) => {
                 if (err && resp?.status === 400) {
                     setErrorMessage(resp.body?.message);
@@ -140,7 +147,7 @@ export default function Home() {
         const update = new UpdateSpending(maxAmt);
         new UserSpendingApi().updateUserSpending(
             bankId,
-            { updateSpending: update },
+            {updateSpending: update},
             (err, _d, resp) => {
                 if (err) {
                     if (resp?.status === 400) {
@@ -164,20 +171,19 @@ export default function Home() {
 
     // Logout handler
     const handleLogout = () => {
-        localStorage.removeItem('authToken');
+        logout();
         window.location.href = '/login';
     };
 
     return (
-        <div className="container py-4 position-relative">
+        <div className="container py-lg-3 position-relative">
             {/* Header */}
             <header className="mb-4 text-center position-relative">
-                <h1 className="display-4 text-primary">CoinKeeper</h1>
+                <h1 className="display-6 text-primary">CoinKeeper</h1>
                 <button
                     className="btn btn-outline-secondary position-absolute"
-                    style={{ top: '1rem', right: '1rem' }}
-                    onClick={handleLogout}
-                >
+                    style={{top: '1rem', right: '1rem'}}
+                    onClick={handleLogout}>
                     Logout
                 </button>
             </header>
@@ -188,7 +194,7 @@ export default function Home() {
                     {errorMessage && (
                         <div
                             className="alert alert-danger position-absolute"
-                            style={{ top: '0.75rem', left: '0.75rem', zIndex: 10, maxWidth: 300 }}
+                            style={{top: '0.75rem', left: '0.75rem', zIndex: 10, maxWidth: 300}}
                         >
                             {errorMessage}
                         </div>
@@ -277,7 +283,7 @@ export default function Home() {
                             {current != null ? (
                                 <p
                                     className="display-6"
-                                    style={{ color: limit != null && current > limit ? 'red' : 'green' }}
+                                    style={{color: limit != null && current > limit ? 'red' : 'green'}}
                                 >
                                     {current}
                                 </p>
@@ -294,12 +300,15 @@ export default function Home() {
                 <div className="card-body">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                         <h2 className="card-title h5 mb-0">Transactions</h2>
-                        <button
-                            className="btn btn-success"
-                            onClick={() => (window.location.href = '/analytics/period')}
-                        >
-                            Analytics
-                        </button>
+                        {costs.length > 0 && (
+                            <button
+                                className="btn btn-success"
+                                onClick={() => (window.location.href = '/analytics/period')}
+                            >
+                                Analytics
+                            </button>
+                        )
+                        }
                     </div>
                     <div className="table-responsive">
                         <table className="table table-striped mb-3">
@@ -325,7 +334,7 @@ export default function Home() {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="4" className="text-center text-muted">
+                                    <td colSpan="5" className="text-center text-muted">
                                         No transactions
                                     </td>
                                 </tr>
@@ -361,9 +370,9 @@ export default function Home() {
             {showTokenModal && (
                 <div
                     className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
-                    style={{ background: 'rgba(0,0,0,0.5)', zIndex: 20 }}
+                    style={{background: 'rgba(0,0,0,0.5)', zIndex: 20}}
                 >
-                    <div className="card p-4" style={{ maxWidth: '400px', width: '100%' }}>
+                    <div className="card p-4" style={{maxWidth: '400px', width: '100%'}}>
                         <h5 className="mb-3">Enter a token for the bank</h5>
                         <input
                             type="text"

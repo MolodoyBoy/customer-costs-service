@@ -13,7 +13,8 @@ import {
     Legend
 } from 'chart.js';
 import { ApiClient, PeriodCostsAnalyticsApi } from 'ccs-openapi-client';
-import { getAuthToken } from '../auth';
+import {getAuthToken, logout} from '../auth';
+import { Link, useNavigate } from 'react-router-dom';
 import './AnalyticsPage.css';
 
 ChartJS.register(
@@ -26,6 +27,7 @@ ChartJS.register(
 );
 
 export default function AnalyticsPage() {
+    const navigate = useNavigate();
     const [periods, setPeriods]           = useState([]);
     const [currentIdx, setCurrentIdx]     = useState(0);
     const [currentLabel, setCurrentLabel] = useState('');
@@ -130,8 +132,36 @@ export default function AnalyticsPage() {
     const average = Math.abs(summary.average).toLocaleString();
     const amtSign = summary.amount >= 0 ? '₴' : '−₴';
 
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
+
     return (
-        <div className="d-flex flex-column min-vh-100">
+        <div className="container py-lg-3 position-relative">
+            {/* Header */}
+            <header className="mb-4 text-center position-relative">
+                {/* Левая кнопка */}
+                <button
+                    className="btn btn-outline-secondary position-absolute"
+                    style={{ top: '1rem', left: '1rem' }}
+                    onClick={() => navigate('/')}>
+                    Home
+                </button>
+
+                {/* Заголовок по-центру */}
+                <h1 className="display-6 text-primary">CoinKeeper</h1>
+
+                {/* Правая кнопка */}
+                <button
+                    className="btn btn-outline-secondary position-absolute"
+                    style={{ top: '1rem', right: '1rem' }}
+                    onClick={handleLogout}>
+                    Logout
+                </button>
+            </header>
+
+
             <Container fluid className="py-4">
                 {/* Title + Period Switcher */}
                 <Row className="mb-4">
@@ -140,22 +170,24 @@ export default function AnalyticsPage() {
                             <h2 className="m-0">
                                 <i className="bi bi-bar-chart-line-fill me-2"></i>Analytics
                             </h2>
-                            <div>
-                                <Button variant="light" size="sm" onClick={prevPeriod} disabled={currentIdx === 0}>
-                                    &lt;
-                                </Button>
-                                <Button variant="outline-secondary" size="sm" className="mx-2" disabled>
-                                    {currentLabel}
-                                </Button>
-                                <Button
-                                    variant="light"
-                                    size="sm"
-                                    onClick={nextPeriod}
-                                    disabled={currentIdx === periods.length - 1}
-                                >
-                                    &gt;
-                                </Button>
-                            </div>
+                            {periods.length > 1 && (
+                                <div>
+                                    <Button variant="light" size="sm" onClick={prevPeriod} disabled={currentIdx === 0}>
+                                        &lt;
+                                    </Button>
+                                    <Button variant="outline-secondary" size="sm" className="mx-2" disabled>
+                                        {currentLabel}
+                                    </Button>
+                                    <Button
+                                        variant="light"
+                                        size="sm"
+                                        onClick={nextPeriod}
+                                        disabled={currentIdx === periods.length - 1}
+                                    >
+                                        &gt;
+                                    </Button>
+                                </div>
+                            )}
                         </div>
                     </Col>
                 </Row>
@@ -252,7 +284,7 @@ export default function AnalyticsPage() {
                         <Card className="shadow-sm">
                             <Card.Header as="h5" className="d-flex justify-content-between align-items-center">
                                 Expense Categories
-                                <Button variant="success">More ➔</Button>
+                                <Button variant="success" onClick={() => (window.location.href = '/analytics/period/all')}>More ➔</Button>
                             </Card.Header>
                             <Card.Body>
                                 <Table hover striped className="mb-0">
@@ -305,10 +337,8 @@ export default function AnalyticsPage() {
             </Container>
 
             {/* Footer */}
-            <footer className="mt-auto text-center py-3 bg-white border-top">
-                <small className="text-muted">
-                    &copy; {new Date().getFullYear()} CoinKeeper. All rights reserved.
-                </small>
+            <footer className="text-center text-muted small">
+                © {new Date().getFullYear()} CoinKeeper
             </footer>
         </div>
     );

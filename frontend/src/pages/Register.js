@@ -110,10 +110,8 @@ export default function Register() {
                 </div>
             </main>
 
-            <footer className="text-center py-3 bg-white border-top">
-                <small className="text-muted">
-                    &copy; {new Date().getFullYear()} CoinKeeper. All rights reserved.
-                </small>
+            <footer className="text-center text-muted small">
+                © {new Date().getFullYear()} CoinKeeper
             </footer>
         </div>
     );

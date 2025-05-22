@@ -9,6 +9,7 @@ import Register from './pages/Register';
 import Home from './pages/Home';
 import AnalyticsPeriod from './pages/AnalyticsPeriod';
 import {isLoggedIn} from "./auth";
+import AnalyticsDetail from "./pages/AnalyticsDetail";
 
 export default function App() {
     return (
@@ -45,6 +46,15 @@ export default function App() {
                     element={
                         <PrivateRoute>
                             <AnalyticsPeriod />
+                        </PrivateRoute>
+                    }
+                />
+
+                <Route
+                    path="/analytics/period/all"
+                    element={
+                        <PrivateRoute>
+                            <AnalyticsDetail />
                         </PrivateRoute>
                     }
                 />
