@@ -10,6 +10,7 @@ import com.oleg.customer.costs.model.PeriodCostsAnalyticsResponseDto;
 import com.oleg.customer.costs.model.PeriodCustomerCostsDto;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Component
@@ -37,10 +38,15 @@ public class PeriodCostsAnalyticsConverter {
     private PeriodCostsAnalyticsDto convert(PeriodCostsAnalyticsSnapshot entity) {
         return new PeriodCostsAnalyticsDto()
             .id(entity.id())
-            .amount(entity.amount().doubleValue())
+            .amount(toDouble(entity.amount()))
             .period(entity.period().toLocalDate())
-            .average(entity.average().doubleValue())
-            .differenceFromPrevious(entity.differenceFromPrevious().doubleValue());
+            .average(toDouble(entity.average()))
+            .differenceFromPrevious(toDouble(entity.differenceFromPrevious()));
+    }
+
+    private Double toDouble(BigDecimal value) {
+        if (value == null) return 0.0;
+        return value.doubleValue();
     }
 
     private List<CategorizedCostsAnalyticsDto> convert(List<CategorizedCostsAnalyticsSnapshot> entities) {
