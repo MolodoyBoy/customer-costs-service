@@ -77,6 +77,16 @@ public class PeriodCostsAnalytics extends TableImpl<Record> {
      */
     public final TableField<Record, BigDecimal> DIFFERENCE_FROM_PREVIOUS_MONTH = createField(DSL.name("difference_from_previous_month"), SQLDataType.NUMERIC, this, "");
 
+    /**
+     * The column <code>public.period_costs_analytics.average</code>.
+     */
+    public final TableField<Record, BigDecimal> AVERAGE = createField(DSL.name("average"), SQLDataType.NUMERIC, this, "");
+
+    /**
+     * The column <code>public.period_costs_analytics.total_transactions</code>.
+     */
+    public final TableField<Record, Integer> TOTAL_TRANSACTIONS = createField(DSL.name("total_transactions"), SQLDataType.INTEGER, this, "");
+
     private PeriodCostsAnalytics(Name alias, Table<Record> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
     }

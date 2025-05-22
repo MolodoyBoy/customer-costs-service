@@ -12,7 +12,7 @@ import {
     Tooltip,
     Legend
 } from 'chart.js';
-import { ApiClient, PeriodCostsAnalyticsApi } from 'ccs-openapi-client';
+import { ApiClient, PeriodCostsAnalytics, PeriodCostsAnalyticsApi } from 'ccs-openapi-client';
 import {getAuthToken} from "../auth";
 
 ChartJS.register(
@@ -27,13 +27,9 @@ ChartJS.register(
 export default function AnalyticsPage() {
     const [periods, setPeriods] = useState([]);
     const [currentIdx, setCurrentIdx] = useState(0);
-
     const [currentLabel, setCurrentLabel] = useState('');
     const [chartData, setChartData] = useState({ labels: [], datasets: [] });
-    const [summary, setSummary] = useState({
-        amount: null,
-        difference: null
-    });
+    const [summary, setSummary] = useState({ amount: 0, difference: 0 });
 
     useEffect(() => {
         const token = getAuthToken();
@@ -54,22 +50,19 @@ export default function AnalyticsPage() {
 
     useEffect(() => {
         if (!periods.length) return;
-
         const { period, periodCostsAnalyticId } = periods[currentIdx];
         const dt = new Date(period);
         const month = dt.toLocaleString('default', { month: 'long' });
         const year = dt.getFullYear();
         setCurrentLabel(`${month} ${year}`);
 
-        // fetch analytics for this period, limit=5
         new PeriodCostsAnalyticsApi().getPeriodCostsAnalytics(
             periodCostsAnalyticId,
             { limit: 5 },
             (err, resp) => {
                 if (err) return;
                 const { customerCosts, periodCostsAnalytics } = resp;
-
-                // build chart data from customerCosts
+                // Chart
                 const labels = customerCosts.map(c =>
                     new Date(c.createdAt).toLocaleDateString()
                 );
@@ -86,22 +79,18 @@ export default function AnalyticsPage() {
                         }
                     ]
                 });
-
-                // summary
+                // Summary
                 setSummary({
                     amount: periodCostsAnalytics.amount,
+                    average: periodCostsAnalytics.average,
                     difference: periodCostsAnalytics.differenceFromPrevious
                 });
             }
         );
     }, [periods, currentIdx]);
 
-    const prevPeriod = () => setCurrentIdx(idx => Math.max(0, idx - 1));
-    const nextPeriod = () => setCurrentIdx(idx => Math.min(periods.length - 1, idx + 1));
-
-    const totalCount = chartData.labels.length;
-    const labels = chartData.labels;
-    const data = chartData;
+    const prevPeriod = () => setCurrentIdx(i => Math.max(0, i - 1));
+    const nextPeriod = () => setCurrentIdx(i => Math.min(periods.length - 1, i + 1));
 
     const options = {
         scales: {
@@ -109,7 +98,7 @@ export default function AnalyticsPage() {
                 ticks: { callback: v => `${(v / 1000).toFixed(1)}K` },
                 title: { display: true, text: 'Expenses (thousands)' }
             },
-            x: { title: { display: true, text: 'Date' } }
+            x: { title: { display: true, text: 'Day of Month' } }
         },
         plugins: {
             legend: { display: false },
@@ -121,6 +110,12 @@ export default function AnalyticsPage() {
         },
         maintainAspectRatio: false
     };
+
+    const diffColor = summary.difference > 0 ? 'red' : 'green';
+    const diffValue = Math.abs(summary.difference).toLocaleString();
+    const amtValue = Math.abs(summary.amount).toLocaleString();
+    const average = Math.abs(summary.average).toLocaleString();
+    const amtSign = summary.amount >= 0 ? '₴' : '−₴';
 
     return (
         <Container fluid className="py-4">
@@ -154,33 +149,29 @@ export default function AnalyticsPage() {
             {/* Summary + Chart */}
             <Row className="mb-5">
                 <Col lg={4}>
-                    <Card className="p-3 h-100 shadow-sm">
+                    <Card className="p-3 h-100 shadow-sm text-center">
                         <h5 className="text-muted">Expenses in {currentLabel}</h5>
-                        <h2 className="my-3">
-                            {summary.amount != null
-                                ? `${summary.amount.toLocaleString()}₴`
-                                : '0₴'}
-                        </h2>
-                        <div>
-                            <small className="text-muted">Less than previous</small>
-                            <div>
-                                {summary.difference != null
-                                    ? `${summary.difference.toLocaleString()}₴`
-                                    : '0₴'}
-                            </div>
+                        <h2 className="my-3">{`${amtSign}${amtValue}`}</h2>
+                        <div className="mt-4 d-flex justify-content-between align-items-center">
+                            <h5 className="text-muted mb-0 me-2">Less than previous:</h5>
+                            <h5 style={{ color: diffColor, margin: 0 }}>{`${diffValue}₴`}</h5>
+                        </div>
+                        <div className="mt-4 d-flex justify-content-between align-items-center">
+                            <h5 className="text-muted mb-0 me-2">Average spending:</h5>
+                            <h5 className="text-primary fw-semibold">{`${average}₴`}</h5>
                         </div>
                     </Card>
                 </Col>
                 <Col lg={8}>
                     <Card className="p-3 h-100 shadow-sm">
                         <div className="position-relative" style={{ height: '300px' }}>
-                            <Line data={data} options={options} />
+                            <Line data={chartData} options={options} />
                         </div>
                     </Card>
                 </Col>
             </Row>
 
-            {/* Categories Tables */}
+            {/* Expense Categories */}
             <Row>
                 <Col md={6} className="mb-4">
                     <Card className="shadow-sm">
@@ -216,6 +207,7 @@ export default function AnalyticsPage() {
                     </Card>
                 </Col>
 
+                {/* Income Categories */}
                 <Col md={6} className="mb-4">
                     <Card className="shadow-sm">
                         <Card.Header as="h5" className="d-flex justify-content-between align-items-center">
@@ -234,4 +226,3 @@ export default function AnalyticsPage() {
         </Container>
     );
 }
-

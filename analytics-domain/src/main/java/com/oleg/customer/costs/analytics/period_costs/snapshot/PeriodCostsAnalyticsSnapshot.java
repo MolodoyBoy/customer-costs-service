@@ -10,10 +10,12 @@ public record PeriodCostsAnalyticsSnapshot(
     int id,
     Period period,
     BigDecimal amount,
+    BigDecimal average,
+    Integer totalTransactions,
     BigDecimal differenceFromPrevious
 ) {
 
-    public PeriodCostsAnalyticsSnapshot(int id, Integer period, BigDecimal amount, BigDecimal differenceFromPrevious) {
-        this(id, of(period), amount, differenceFromPrevious);
+    public PeriodCostsAnalyticsSnapshot(int id, Integer period, BigDecimal amount, BigDecimal average, Integer totalTransactions, BigDecimal differenceFromPrevious) {
+        this(id, of(period), amount, average, totalTransactions, differenceFromPrevious);
     }
 }

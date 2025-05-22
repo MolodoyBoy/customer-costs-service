@@ -39,6 +39,7 @@ public class PeriodCostsAnalyticsConverter {
             .id(entity.id())
             .amount(entity.amount().doubleValue())
             .period(entity.period().toLocalDate())
+            .average(entity.average().doubleValue())
             .differenceFromPrevious(entity.differenceFromPrevious().doubleValue());
     }
 

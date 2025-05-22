@@ -17,6 +17,8 @@ public class PeriodCostsAnalyticsMapper implements RecordMapper<Record, PeriodCo
             rc.get(PERIOD_COSTS_ANALYTICS.ID),
             getNullableField(rc, PERIOD_COSTS_ANALYTICS.PERIOD),
             getNullableField(rc, PERIOD_COSTS_ANALYTICS.AMOUNT),
+            getNullableField(rc, PERIOD_COSTS_ANALYTICS.AVERAGE),
+            getNullableField(rc, PERIOD_COSTS_ANALYTICS.TOTAL_TRANSACTIONS),
             getNullableField(rc, PERIOD_COSTS_ANALYTICS.DIFFERENCE_FROM_PREVIOUS_MONTH)
         );
     }

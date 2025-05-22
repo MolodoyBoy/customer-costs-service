@@ -67,6 +67,8 @@ class DbPeriodCostsAnalyticsSource implements AdminPeriodCostsAnalyticsSource, G
                 PERIOD_COSTS_ANALYTICS.ID,
                 PERIOD_COSTS_ANALYTICS.AMOUNT,
                 PERIOD_COSTS_ANALYTICS.PERIOD,
+                PERIOD_COSTS_ANALYTICS.AVERAGE,
+                PERIOD_COSTS_ANALYTICS.TOTAL_TRANSACTIONS,
                 PERIOD_COSTS_ANALYTICS.DIFFERENCE_FROM_PREVIOUS_MONTH)
             .from(PERIOD_COSTS_ANALYTICS)
             .where(condition)
