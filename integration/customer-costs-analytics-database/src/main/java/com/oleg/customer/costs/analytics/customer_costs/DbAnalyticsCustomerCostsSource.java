@@ -5,14 +5,17 @@ import com.oleg.customer.costs.analytics.customer_costs.entity.CustomerCosts;
 import com.oleg.customer.costs.analytics.customer_costs.mapper.CustomerCostsByCategoryMapper;
 import com.oleg.customer.costs.analytics.customer_costs.mapper.CustomerCostsByPeriodMapper;
 import com.oleg.customer.costs.analytics.customer_costs.mapper.AnalyticsCustomerCostsQueryMapper;
-import com.oleg.customer.costs.analytics.customer_costs.query.CustomerCostsQuery;
+import com.oleg.customer.costs.analytics.customer_costs.query.CategoryCustomerCostsQuery;
+import com.oleg.customer.costs.analytics.customer_costs.query.PeriodCustomerCostsQuery;
 import com.oleg.customer.costs.analytics.customer_costs.source.AdminCustomerCostsSource;
 import com.oleg.customer.costs.analytics.customer_costs.source.GetCustomerCosts;
 import org.jooq.DSLContext;
+import org.jooq.Record;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.oleg.customer.costs.analytics.customer_costs.CustomerCostsFields.*;
 import static com.oleg.fund.customer.costs.analytics.tables.CustomerCosts.CUSTOMER_COSTS;
 import static com.oleg.fund.customer.costs.analytics.tables.CustomerCostsByCategory.CUSTOMER_COSTS_BY_CATEGORY;
 import static com.oleg.fund.customer.costs.analytics.tables.CustomerCostsByPeriod.CUSTOMER_COSTS_BY_PERIOD;
@@ -53,21 +56,18 @@ class DbAnalyticsCustomerCostsSource implements GetCustomerCosts, AdminCustomerC
     }
 
     @Override
-    public List<CustomerCostsQuery> getForPeriod(int periodCostsAnalyticsId) {
-        return dslContext.select(
-                CUSTOMER_COSTS.AMOUNT,
-                CUSTOMER_COSTS.CREATED_AT,
-                CUSTOMER_COSTS.DESCRIPTION
-            )
+    public List<PeriodCustomerCostsQuery> getForPeriod(int periodCostsAnalyticsId) {
+        return dslContext.select(sum(), createdAt())
             .from(CUSTOMER_COSTS)
             .innerJoin(CUSTOMER_COSTS_BY_PERIOD).on(CUSTOMER_COSTS_BY_PERIOD.CUSTOMER_COSTS_ID.eq(CUSTOMER_COSTS.ID))
             .where(CUSTOMER_COSTS_BY_PERIOD.PERIOD_COSTS_ANALYTICS_ID.eq(periodCostsAnalyticsId))
-            .orderBy(CUSTOMER_COSTS.CREATED_AT.asc())
+            .groupBy(createdAt())
+            .orderBy(createdAt())
             .fetch(analyticsCustomerCostsQueryMapper);
     }
 
     @Override
-    public List<CustomerCostsQuery> getForCategory(Paginator paginator, int categoryCostsAnalyticsId) {
+    public List<CategoryCustomerCostsQuery> getForCategory(Paginator paginator, int categoryCostsAnalyticsId) {
         return dslContext.select(
                 CUSTOMER_COSTS.AMOUNT,
                 CUSTOMER_COSTS.CREATED_AT,
@@ -79,6 +79,14 @@ class DbAnalyticsCustomerCostsSource implements GetCustomerCosts, AdminCustomerC
             .orderBy(CUSTOMER_COSTS.CREATED_AT.desc())
             .offset(paginator.skip())
             .limit(paginator.limit())
-            .fetch(analyticsCustomerCostsQueryMapper);
+            .fetch(this::map);
+    }
+
+    private CategoryCustomerCostsQuery map(Record rc) {
+        return new CategoryCustomerCostsQuery(
+            rc.get(CUSTOMER_COSTS.AMOUNT),
+            rc.get(CUSTOMER_COSTS.DESCRIPTION),
+            rc.get(CUSTOMER_COSTS.CREATED_AT)
+        );
     }
 }

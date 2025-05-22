@@ -1,11 +1,10 @@
 package com.oleg.customer.costs.analytics.customer_costs.query;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
-public record CustomerCostsQuery(
+public record PeriodCustomerCostsQuery(
     BigDecimal amount,
-    String description,
-    LocalDateTime createdAt
+    LocalDate createdAt
 ) {
 }

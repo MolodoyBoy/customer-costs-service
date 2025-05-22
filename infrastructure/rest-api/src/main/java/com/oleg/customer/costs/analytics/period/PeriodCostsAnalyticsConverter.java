@@ -1,7 +1,7 @@
 package com.oleg.customer.costs.analytics.period;
 
 import com.oleg.customer.costs.analytics.categorized_costs.snapshot.CategorizedCostsAnalyticsSnapshot;
-import com.oleg.customer.costs.analytics.customer_costs.query.CustomerCostsQuery;
+import com.oleg.customer.costs.analytics.customer_costs.query.PeriodCustomerCostsQuery;
 import com.oleg.customer.costs.analytics.period_costs.snapshot.PeriodCostsAnalyticsSnapshot;
 import com.oleg.customer.costs.analytics.period_costs.value_object.PeriodCostsAnalyticsWithCategories;
 import com.oleg.customer.costs.model.CategorizedCostsAnalyticsDto;
@@ -22,16 +22,16 @@ public class PeriodCostsAnalyticsConverter {
             .categorizedCostsAnalytics(convert(entity.categorizedCostsAnalytics()));
     }
 
-    private List<PeriodCustomerCostsDto> convertCustomerCosts(List<CustomerCostsQuery> customerCostsQueries) {
+    private List<PeriodCustomerCostsDto> convertCustomerCosts(List<PeriodCustomerCostsQuery> customerCostsQueries) {
         return customerCostsQueries.stream()
             .map(this::convert)
             .toList();
     }
 
-    private PeriodCustomerCostsDto convert(CustomerCostsQuery customerCostsQuery) {
+    private PeriodCustomerCostsDto convert(PeriodCustomerCostsQuery periodCustomerCostsQuery) {
         return new PeriodCustomerCostsDto()
-            .amount(customerCostsQuery.amount().doubleValue())
-            .createdAt(customerCostsQuery.createdAt().toLocalDate());
+            .amount(periodCustomerCostsQuery.amount().doubleValue())
+            .createdAt(periodCustomerCostsQuery.createdAt());
     }
 
     private PeriodCostsAnalyticsDto convert(PeriodCostsAnalyticsSnapshot entity) {

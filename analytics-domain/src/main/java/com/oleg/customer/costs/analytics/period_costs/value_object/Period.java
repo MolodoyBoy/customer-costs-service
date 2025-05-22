@@ -2,6 +2,7 @@ package com.oleg.customer.costs.analytics.period_costs.value_object;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 
 public record Period(int year, int month) {
 
@@ -38,5 +39,9 @@ public record Period(int year, int month) {
 
     public LocalDate toLocalDate() {
         return LocalDate.of(year, month, 1);
+    }
+
+    public YearMonth toYearMonth() {
+        return YearMonth.of(year, month);
     }
 }

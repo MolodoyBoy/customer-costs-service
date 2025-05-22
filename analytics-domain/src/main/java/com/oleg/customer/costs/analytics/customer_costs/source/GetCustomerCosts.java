@@ -1,13 +1,14 @@
 package com.oleg.customer.costs.analytics.customer_costs.source;
 
 import com.oleg.customer.costs.analytics.common.value_object.Paginator;
-import com.oleg.customer.costs.analytics.customer_costs.query.CustomerCostsQuery;
+import com.oleg.customer.costs.analytics.customer_costs.query.CategoryCustomerCostsQuery;
+import com.oleg.customer.costs.analytics.customer_costs.query.PeriodCustomerCostsQuery;
 
 import java.util.List;
 
 public interface GetCustomerCosts {
 
-    List<CustomerCostsQuery> getForPeriod(int periodCostsAnalyticsId);
+    List<PeriodCustomerCostsQuery> getForPeriod(int periodCostsAnalyticsId);
 
-    List<CustomerCostsQuery> getForCategory(Paginator paginator, int categoryCostsAnalyticsId);
+    List<CategoryCustomerCostsQuery> getForCategory(Paginator paginator, int categoryCostsAnalyticsId);
 }

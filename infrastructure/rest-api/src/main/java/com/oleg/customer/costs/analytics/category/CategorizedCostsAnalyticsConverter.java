@@ -2,7 +2,7 @@ package com.oleg.customer.costs.analytics.category;
 
 import com.oleg.customer.costs.analytics.categorized_costs.snapshot.CategorizedCostsAnalyticsSnapshot;
 import com.oleg.customer.costs.analytics.categorized_costs.value_object.CategorizedCostsAnalyticsWithCosts;
-import com.oleg.customer.costs.analytics.customer_costs.query.CustomerCostsQuery;
+import com.oleg.customer.costs.analytics.customer_costs.query.CategoryCustomerCostsQuery;
 import com.oleg.customer.costs.model.CategorizedCostsAnalyticsDto;
 import com.oleg.customer.costs.model.CategorizedCostsAnalyticsResponseDto;
 import com.oleg.customer.costs.model.CustomerCostsDto;
@@ -20,13 +20,13 @@ public class CategorizedCostsAnalyticsConverter {
             .categorizedCostsAnalytics(convert(entity.categorizedCostsAnalytics()));
     }
 
-    private List<CustomerCostsDto> convert(List<CustomerCostsQuery> customerCosts) {
+    private List<CustomerCostsDto> convert(List<CategoryCustomerCostsQuery> customerCosts) {
         return customerCosts.stream()
             .map(this::convert)
             .toList();
     }
 
-    private CustomerCostsDto convert(CustomerCostsQuery customerCostsQuery) {
+    private CustomerCostsDto convert(CategoryCustomerCostsQuery customerCostsQuery) {
         return new CustomerCostsDto()
             .description(customerCostsQuery.description())
             .amount(customerCostsQuery.amount().doubleValue())
