@@ -9,6 +9,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,10 @@ class CustomerCostsListener {
 
         consumerRecords.forEach(c -> {
             CustomerCostsData data = c.value();
-            customerCosts.add(convert(data));
+
+            if (data.amount().compareTo(BigDecimal.ZERO) < 0) {
+                customerCosts.add(convert(data));
+            }
         });
 
         publisher.publishMessage(new PeriodCostsAnalyticsMessage(customerCosts));
@@ -45,7 +49,7 @@ class CustomerCostsListener {
             data.id(),
             data.userId(),
             data.categoryId(),
-            data.amount(),
+            data.amount().abs(),
             data.description(),
             data.createdAt()
         );

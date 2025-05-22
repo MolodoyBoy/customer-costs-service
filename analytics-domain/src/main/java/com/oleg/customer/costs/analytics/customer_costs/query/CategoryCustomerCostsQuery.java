@@ -6,5 +6,5 @@ import java.time.LocalDateTime;
 public record CategoryCustomerCostsQuery(
     BigDecimal amount,
     String description,
-    LocalDateTime createdAt){
-}
+    LocalDateTime createdAt
+){}

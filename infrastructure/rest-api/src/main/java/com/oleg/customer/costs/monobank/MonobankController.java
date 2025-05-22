@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+import static java.math.BigDecimal.valueOf;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @CrossOrigin(
@@ -64,13 +66,11 @@ public class MonobankController {
             convert(statementItem.getAmount()),
             statementItem.getDescription(),
             LocalDateTime.ofInstant(statementItem.getTime(), ZoneId.systemDefault()),
-            convert(statementItem.getCommissionRate())
+            convert(statementItem.getCommissionRate()).abs()
         );
     }
 
     private BigDecimal convert(double amount) {
-        return BigDecimal.valueOf(amount)
-            .divide(BigDecimal.valueOf(100))
-            .abs();
+        return valueOf(amount).divide(valueOf(100), MathContext.DECIMAL32);
     }
 }

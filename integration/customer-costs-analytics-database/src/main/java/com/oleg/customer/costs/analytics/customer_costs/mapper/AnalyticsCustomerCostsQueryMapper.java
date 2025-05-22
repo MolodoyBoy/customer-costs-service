@@ -13,7 +13,7 @@ public class AnalyticsCustomerCostsQueryMapper implements RecordMapper<Record, P
     @Override
     public PeriodCustomerCostsQuery map(Record rc) {
         return new PeriodCustomerCostsQuery(
-            rc.get(sum()),
+            rc.get(sum()).abs(),
             rc.get(createdAt())
         );
     }

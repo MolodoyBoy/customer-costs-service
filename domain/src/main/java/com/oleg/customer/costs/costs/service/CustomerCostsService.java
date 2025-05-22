@@ -57,7 +57,6 @@ public class CustomerCostsService {
 
         Integer categoryId = customerCostsCategoryClassifier.classify(cmd);
         CustomerCosts categorizedCosts = new CustomerCosts(
-            -1,
             userId,
             cmd.bankId(),
             categoryId,
@@ -71,15 +70,17 @@ public class CustomerCostsService {
 
         BigDecimal currentAmount = currentAmount(List.of(categorizedCosts));
 
-        BigDecimal previousMaxSpending = userSpendingSource.getPreviousMaxSpending(userId, cmd.bankId());
-        CreateUserSpending createUserSpending = new CreateUserSpending(
-            userId,
-            cmd.bankId(),
-            previousMaxSpending,
-            currentAmount
-        );
+        if (categorizedCosts.outcome()) {
+            BigDecimal previousMaxSpending = userSpendingSource.getPreviousMaxSpending(userId, cmd.bankId());
+            CreateUserSpending createUserSpending = new CreateUserSpending(
+                userId,
+                cmd.bankId(),
+                previousMaxSpending,
+                currentAmount
+            );
 
-        userSpendingSource.createUserSpending(createUserSpending);
+            userSpendingSource.createUserSpending(createUserSpending);
+        }
     }
 
     private BigDecimal currentAmount(List<CustomerCosts> customerCosts) {
