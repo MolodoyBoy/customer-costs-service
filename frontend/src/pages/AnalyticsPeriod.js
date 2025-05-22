@@ -118,111 +118,181 @@ export default function AnalyticsPage() {
     const amtSign = summary.amount >= 0 ? '₴' : '−₴';
 
     return (
-        <Container fluid className="py-4">
-            {/* Title + Period Switcher */}
-            <Row className="mb-4">
-                <Col>
-                    <div className="d-flex align-items-center justify-content-between">
-                        <h2 className="m-0">
-                            <i className="bi bi-bar-chart-line-fill me-2"></i>Analytics
-                        </h2>
-                        <div>
-                            <Button variant="light" size="sm" onClick={prevPeriod} disabled={currentIdx === 0}>
-                                &lt;
-                            </Button>
-                            <Button variant="outline-secondary" size="sm" className="mx-2" disabled>
-                                {currentLabel}
-                            </Button>
-                            <Button
-                                variant="light"
-                                size="sm"
-                                onClick={nextPeriod}
-                                disabled={currentIdx === periods.length - 1}
-                            >
-                                &gt;
-                            </Button>
-                        </div>
-                    </div>
-                </Col>
-            </Row>
-
-            {/* Summary + Chart */}
-            <Row className="mb-5">
-                <Col lg={4}>
-                    <Card className="p-3 h-100 shadow-sm text-center">
-                        <h5 className="text-muted">Expenses in {currentLabel}</h5>
-                        <h2 className="my-3">{`${amtSign}${amtValue}`}</h2>
-                        <div className="mt-4 d-flex justify-content-between align-items-center">
-                            <h5 className="text-muted mb-0 me-2">Less than previous:</h5>
-                            <h5 style={{ color: diffColor, margin: 0 }}>{`${diffValue}₴`}</h5>
-                        </div>
-                        <div className="mt-4 d-flex justify-content-between align-items-center">
-                            <h5 className="text-muted mb-0 me-2">Average spending:</h5>
-                            <h5 className="text-primary fw-semibold">{`${average}₴`}</h5>
-                        </div>
-                    </Card>
-                </Col>
-                <Col lg={8}>
-                    <Card className="p-3 h-100 shadow-sm">
-                        <div className="position-relative" style={{ height: '300px' }}>
-                            <Line data={chartData} options={options} />
-                        </div>
-                    </Card>
-                </Col>
-            </Row>
-
-            {/* Expense Categories */}
-            <Row>
-                <Col md={6} className="mb-4">
-                    <Card className="shadow-sm">
-                        <Card.Header as="h5" className="d-flex justify-content-between align-items-center">
-                            Expense Categories
-                            <Button variant="success">More ➔</Button>
-                        </Card.Header>
-                        <Card.Body className="p-0">
-                            <Table hover className="mb-0">
-                                <thead className="table-light">
-                                <tr>
-                                    <th>Category</th>
-                                    <th>Transactions</th>
-                                    <th>Amount</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {[
-                                    { name: 'Transfers', tx: 4, amount: -21105 },
-                                    { name: 'Digital Goods', tx: 5, amount: -7679 },
-                                    { name: 'Online Stores', tx: 1, amount: -7177 },
-                                    { name: 'Taxi', tx: 37, amount: -5554 }
-                                ].map((row, i) => (
-                                    <tr key={i}>
-                                        <td>{row.name}</td>
-                                        <td>{row.tx}</td>
-                                        <td className="text-end">₴{Math.abs(row.amount).toLocaleString()}</td>
-                                    </tr>
-                                ))}
-                                </tbody>
-                            </Table>
-                        </Card.Body>
-                    </Card>
-                </Col>
-
-                {/* Income Categories */}
-                <Col md={6} className="mb-4">
-                    <Card className="shadow-sm">
-                        <Card.Header as="h5" className="d-flex justify-content-between align-items-center">
-                            Income Categories
-                            <Button variant="success">More ➔</Button>
-                        </Card.Header>
-                        <Card.Body className="text-center py-5">
-                            <div className="mb-3">
-                                <i className="bi bi-box-seam" style={{ fontSize: '3rem', color: '#ccc' }} />
+        <div className="d-flex flex-column min-vh-100">
+            <Container fluid className="py-4">
+                {/* Title + Period Switcher */}
+                <Row className="mb-4">
+                    <Col>
+                        <div className="d-flex align-items-center justify-content-between">
+                            <h2 className="m-0">
+                                <i className="bi bi-bar-chart-line-fill me-2"></i>Analytics
+                            </h2>
+                            <div>
+                                <Button variant="light" size="sm" onClick={prevPeriod} disabled={currentIdx === 0}>
+                                    &lt;
+                                </Button>
+                                <Button variant="outline-secondary" size="sm" className="mx-2" disabled>
+                                    {currentLabel}
+                                </Button>
+                                <Button
+                                    variant="light"
+                                    size="sm"
+                                    onClick={nextPeriod}
+                                    disabled={currentIdx === periods.length - 1}
+                                >
+                                    &gt;
+                                </Button>
                             </div>
-                            <div className="text-muted">No income for this period</div>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
-        </Container>
+                        </div>
+                    </Col>
+                </Row>
+
+                {/* Summary + Chart */}
+                <Row className="mb-5">
+                    <Col lg={4}>
+                        <Card className="p-3 h-100 shadow-sm text-center">
+                            <h5 className="text-muted">Expenses in {currentLabel}</h5>
+                            <h2 className="my-3">{`${amtSign}${amtValue}`}</h2>
+                            <div className="mt-4 d-flex justify-content-between align-items-center">
+                                <h5 className="text-muted mb-0 me-2">Less than previous:</h5>
+                                <h5 style={{color: diffColor, margin: 0}}>{`${diffValue}₴`}</h5>
+                            </div>
+                            <div className="mt-4 d-flex justify-content-between align-items-center">
+                                <h5 className="text-muted mb-0 me-2">Average spending:</h5>
+                                <h5 className="text-primary fw-semibold">{`${average}₴`}</h5>
+                            </div>
+                        </Card>
+                    </Col>
+                    <Col lg={8}>
+                        <Card className="p-3 h-100 shadow-sm border-0 rounded-3">
+                            <Card.Body className="p-0">
+                                <div className="position-relative" style={{ height: '300px' }}>
+                                    <Line
+                                        data={chartData}
+                                        options={{
+                                            ...options,
+                                            elements: {
+                                                line: {
+                                                    tension: 0.3,
+                                                    borderColor: '#6f42c1',
+                                                    borderWidth: 4,
+                                                    fill: 'start',
+                                                    backgroundColor: ctx => {
+                                                        const gradient = ctx.chart.ctx.createLinearGradient(0, 0, 0, 300);
+                                                        gradient.addColorStop(0, 'rgba(111, 66, 193, 0.4)');
+                                                        gradient.addColorStop(1, 'rgba(111, 66, 193, 0)');
+                                                        return gradient;
+                                                    }
+                                                },
+                                                point: {
+                                                    radius: 5,
+                                                    backgroundColor: '#6f42c1',
+                                                    hoverRadius: 8,
+                                                }
+                                            },
+                                            scales: {
+                                                x: {
+                                                    grid: {
+                                                        display: false
+                                                    },
+                                                    ticks: {
+                                                        color: '#495057',
+                                                        font: { size: 12 }
+                                                    }
+                                                },
+                                                y: {
+                                                    grid: {
+                                                        color: '#e9ecef'
+                                                    },
+                                                    ticks: {
+                                                        color: '#495057',
+                                                        font: { size: 12 },
+                                                        callback: v => `${(v / 1000).toFixed(1)}K`
+                                                    }
+                                                }
+                                            },
+                                            plugins: {
+                                                legend: { display: false },
+                                                tooltip: {
+                                                    backgroundColor: 'rgba(0,0,0,0.7)',
+                                                    titleFont: { size: 14 },
+                                                    bodyFont: { size: 12 },
+                                                    cornerRadius: 4,
+                                                    padding: 8,
+                                                    callbacks: {
+                                                        label: ctx => `₴${Number(ctx.parsed.y).toLocaleString()}`
+                                                    }
+                                                }
+                                            },
+                                            maintainAspectRatio: false
+                                        }}
+                                    />
+                                </div>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+
+                </Row>
+
+
+                <Row>
+                    <Col md={6} className="mb-4">
+                        <Card className="shadow-sm">
+                            <Card.Header as="h5" className="d-flex justify-content-between align-items-center">
+                                Expense Categories
+                                <Button variant="success">More ➔</Button>
+                            </Card.Header>
+                            <Card.Body className="p-0">
+                                <Table hover className="mb-0">
+                                    <thead className="table-light">
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Transactions</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {[
+                                        {name: 'Transfers', tx: 4, amount: -21105},
+                                        {name: 'Digital Goods', tx: 5, amount: -7679},
+                                        {name: 'Online Stores', tx: 1, amount: -7177},
+                                        {name: 'Taxi', tx: 37, amount: -5554}
+                                    ].map((row, i) => (
+                                        <tr key={i}>
+                                            <td>{row.name}</td>
+                                            <td>{row.tx}</td>
+                                            <td className="text-end">₴{Math.abs(row.amount).toLocaleString()}</td>
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </Table>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+
+                    {/* Income Categories */}
+                    <Col md={6} className="mb-4">
+                        <Card className="shadow-sm">
+                            <Card.Header as="h5" className="d-flex justify-content-between align-items-center">
+                                Income Categories
+                                <Button variant="success">More ➔</Button>
+                            </Card.Header>
+                            <Card.Body className="text-center py-5">
+                                <div className="mb-3">
+                                    <i className="bi bi-box-seam" style={{fontSize: '3rem', color: '#ccc'}}/>
+                                </div>
+                                <div className="text-muted">No income for this period</div>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                </Row>
+            </Container>
+            {/* Footer */}
+            <footer className="mt-auto text-center py-3 bg-white border-top">
+                <small className="text-muted">
+                    &copy; {new Date().getFullYear()} CoinKeeper. All rights reserved.
+                </small>
+            </footer>
+        </div>
     );
 }
