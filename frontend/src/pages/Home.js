@@ -273,7 +273,7 @@ export default function Home() {
                 <div className="col-md-6 mb-3">
                     <div className="card shadow-sm">
                         <div className="card-body">
-                            <h2 className="card-title h5">Current amount</h2>
+                            <h2 className="card-title h5">Current expense amount</h2>
                             {current != null ? (
                                 <p
                                     className="display-6"
