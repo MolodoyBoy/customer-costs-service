@@ -87,7 +87,7 @@ export default function AnalyticsDetail() {
 
             <Container fluid className="py-4 analytics-detail">
                 <div className="d-flex align-items-center mb-4">
-                    <h2 className="m-0">Expenses Detail</h2>
+                    <h2 className="m-0">Expenses Details</h2>
                 </div>
                 <Row>
                     {/* Donut chart */}

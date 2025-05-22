@@ -51,7 +51,7 @@ export default function App() {
                 />
 
                 <Route
-                    path="/analytics/period/all"
+                    path="/analytics/period/detail"
                     element={
                         <PrivateRoute>
                             <AnalyticsDetail />

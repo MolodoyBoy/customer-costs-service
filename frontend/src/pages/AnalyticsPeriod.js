@@ -137,6 +137,11 @@ export default function AnalyticsPage() {
         navigate('/login');
     };
 
+    const handleMore = () => {
+        const { periodCostsAnalyticId } = periods[currentIdx];
+        navigate('/analytics/period/detail', { state: { periodId: periodCostsAnalyticId } });
+    };
+
     return (
         <div className="container py-lg-3 position-relative">
             {/* Header */}
@@ -284,7 +289,7 @@ export default function AnalyticsPage() {
                         <Card className="shadow-sm">
                             <Card.Header as="h5" className="d-flex justify-content-between align-items-center">
                                 Expense Categories
-                                <Button variant="success" onClick={() => (window.location.href = '/analytics/period/all')}>More ➔</Button>
+                                <Button variant="success" onClick={handleMore}>More ➔</Button>
                             </Card.Header>
                             <Card.Body>
                                 <Table hover striped className="mb-0">
