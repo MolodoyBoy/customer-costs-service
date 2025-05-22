@@ -29,6 +29,7 @@ class CategorizedCostsAnalyticsColumnBinding implements ColumnBinding {
         fieldBindings.put(AMOUNT, CATEGORIZED_COSTS_ANALYTICS.AMOUNT);
         fieldBindings.put(PERCENT, CATEGORIZED_COSTS_ANALYTICS.PERCENT);
         fieldBindings.put(CATEGORY_DESCRIPTION, COSTS_CATEGORY.DESCRIPTION);
+        fieldBindings.put(CATEGORY_ID, CATEGORIZED_COSTS_ANALYTICS.CATEGORY_ID);
         fieldBindings.put(TRANSACTIONS_COUNT, CATEGORIZED_COSTS_ANALYTICS.TRANSACTIONS_COUNT);
 
         validate();

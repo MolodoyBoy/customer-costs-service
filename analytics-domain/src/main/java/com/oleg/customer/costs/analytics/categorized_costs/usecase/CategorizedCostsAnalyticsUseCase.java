@@ -11,6 +11,7 @@ import java.util.Set;
 
 import static com.oleg.customer.costs.analytics.categorized_costs.colum.CategorizedCostsAnalyticsColumn.AMOUNT;
 import static com.oleg.customer.costs.analytics.categorized_costs.colum.CategorizedCostsAnalyticsColumn.CATEGORY_DESCRIPTION;
+import static com.oleg.customer.costs.analytics.categorized_costs.colum.CategorizedCostsAnalyticsColumn.CATEGORY_ID;
 import static com.oleg.customer.costs.analytics.categorized_costs.colum.CategorizedCostsAnalyticsColumn.ID;
 import static com.oleg.customer.costs.analytics.categorized_costs.colum.CategorizedCostsAnalyticsColumn.PERCENT;
 import static com.oleg.customer.costs.analytics.categorized_costs.colum.CategorizedCostsAnalyticsColumn.TRANSACTIONS_COUNT;
@@ -30,7 +31,7 @@ public class CategorizedCostsAnalyticsUseCase {
     }
 
     public CategorizedCostsAnalyticsWithCosts get(int id, Paginator paginator) {
-        var columns = Set.of(ID, AMOUNT, CATEGORY_DESCRIPTION, PERCENT, TRANSACTIONS_COUNT);
+        var columns = Set.of(ID, CATEGORY_ID, AMOUNT, CATEGORY_DESCRIPTION, PERCENT, TRANSACTIONS_COUNT);
 
         if (paginator == null) {
             paginator = new Paginator(CUSTOMER_COSTS_LIMIT);

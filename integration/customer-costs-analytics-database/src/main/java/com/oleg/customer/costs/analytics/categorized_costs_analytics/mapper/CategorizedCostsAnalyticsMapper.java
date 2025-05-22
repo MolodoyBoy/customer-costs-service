@@ -25,6 +25,7 @@ public class CategorizedCostsAnalyticsMapper implements ToRecordMapper<Categoriz
     public CategorizedCostsAnalytics map(Record rc) {
         return new CategorizedCostsAnalytics(
             rc.get(CATEGORIZED_COSTS_ANALYTICS.ID),
+            rc.get(CATEGORIZED_COSTS_ANALYTICS.CATEGORY_ID),
             getNullableField(rc, CATEGORIZED_COSTS_ANALYTICS.AMOUNT),
             getNullableField(rc, CATEGORIZED_COSTS_ANALYTICS.PERCENT),
             getNullableField(rc, CATEGORIZED_COSTS_ANALYTICS.TRANSACTIONS_COUNT),
@@ -40,6 +41,7 @@ public class CategorizedCostsAnalyticsMapper implements ToRecordMapper<Categoriz
         rc.set(CATEGORIZED_COSTS_ANALYTICS.ID, snapshot.id());
         rc.set(CATEGORIZED_COSTS_ANALYTICS.AMOUNT, snapshot.amount());
         rc.set(CATEGORIZED_COSTS_ANALYTICS.PERCENT, snapshot.percent());
+        rc.set(CATEGORIZED_COSTS_ANALYTICS.CATEGORY_ID, snapshot.categoryId());
         rc.set(CATEGORIZED_COSTS_ANALYTICS.TRANSACTIONS_COUNT, snapshot.transactionsCount());
 
         return rc;

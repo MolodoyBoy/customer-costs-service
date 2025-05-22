@@ -12,7 +12,6 @@ public class CategorizedCostAnalyticsCreateCommandConditionBuilder implements Co
 
     @Override
     public Condition buildCondition(CategorizedCostAnalyticsCreateCommand value) {
-        return CATEGORIZED_COSTS_ANALYTICS.CATEGORY_ID.eq(value.categoryId())
-            .and(CATEGORIZED_COSTS_ANALYTICS.PERIOD_COST_ANALYTICS_ID.eq(value.periodCostsAnalyticsId()));
+        return CATEGORIZED_COSTS_ANALYTICS.PERIOD_COST_ANALYTICS_ID.eq(value.periodCostsAnalyticsId());
     }
 }

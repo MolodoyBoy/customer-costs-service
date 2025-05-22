@@ -21,6 +21,7 @@ import java.util.Set;
 
 import static com.oleg.customer.costs.analytics.categorized_costs.colum.CategorizedCostsAnalyticsColumn.AMOUNT;
 import static com.oleg.customer.costs.analytics.categorized_costs.colum.CategorizedCostsAnalyticsColumn.CATEGORY_DESCRIPTION;
+import static com.oleg.customer.costs.analytics.categorized_costs.colum.CategorizedCostsAnalyticsColumn.CATEGORY_ID;
 import static com.oleg.customer.costs.analytics.categorized_costs.colum.CategorizedCostsAnalyticsColumn.ID;
 import static com.oleg.customer.costs.analytics.categorized_costs.colum.CategorizedCostsAnalyticsColumn.PERCENT;
 import static com.oleg.customer.costs.analytics.categorized_costs.colum.CategorizedCostsAnalyticsColumn.TRANSACTIONS_COUNT;
@@ -71,7 +72,7 @@ public class PeriodCostsAnalyticsUseCase {
         }
 
         var forPeriod = getCustomerCosts.getForPeriod(id);
-        var columns = Set.of(ID, AMOUNT, PERCENT, TRANSACTIONS_COUNT, CATEGORY_DESCRIPTION);
+        var columns = Set.of(ID, CATEGORY_ID, AMOUNT, PERCENT, TRANSACTIONS_COUNT, CATEGORY_DESCRIPTION);
         var categorizedCostsAnalytics = getCategorizedCostsAnalyticsSource.getForPeriod(limit, id, columns);
 
         var extrapolated = extrapolate(periodCostsAnalytics.period().toYearMonth(), forPeriod);

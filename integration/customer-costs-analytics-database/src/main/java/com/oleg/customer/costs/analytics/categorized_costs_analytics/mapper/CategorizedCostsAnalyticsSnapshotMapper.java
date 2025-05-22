@@ -16,6 +16,7 @@ public class CategorizedCostsAnalyticsSnapshotMapper implements RecordMapper<Rec
     public CategorizedCostsAnalyticsSnapshot map(Record rc) {
         return new CategorizedCostsAnalyticsSnapshot(
             rc.get(CATEGORIZED_COSTS_ANALYTICS.ID),
+            rc.get(CATEGORIZED_COSTS_ANALYTICS.CATEGORY_ID),
             getNullableField(rc, CATEGORIZED_COSTS_ANALYTICS.AMOUNT),
             getNullableField(rc, CATEGORIZED_COSTS_ANALYTICS.PERCENT),
             getNullableField(rc, CATEGORIZED_COSTS_ANALYTICS.TRANSACTIONS_COUNT),

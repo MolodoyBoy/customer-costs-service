@@ -17,6 +17,7 @@ public class CategorizedCostsAnalytics {
     private static final BigDecimal HUNDRED_PERCENT = valueOf(100);
 
     private final int id;
+    private final int categoryId;
     private final String categoryDescription;
 
     private BigDecimal amount;
@@ -24,6 +25,7 @@ public class CategorizedCostsAnalytics {
     private int transactionsCount;
 
     public CategorizedCostsAnalytics(int id,
+                                     int categoryId,
                                      BigDecimal amount,
                                      BigDecimal percent,
                                      Integer transactionsCount,
@@ -31,6 +33,7 @@ public class CategorizedCostsAnalytics {
         this.id = id;
         this.amount = amount;
         this.percent = percent;
+        this.categoryId = categoryId;
         this.categoryDescription = categoryDescription;
         this.transactionsCount = transactionsCount != null ? transactionsCount : 0;
     }
@@ -40,7 +43,7 @@ public class CategorizedCostsAnalytics {
     }
 
     public void addCustomerCosts(CustomerCosts customerCosts) {
-        if (customerCosts == null) return;
+        if (customerCosts == null || categoryId != customerCosts.categoryId()) return;
 
         transactionsCount += 1;
         if (this.amount == null) {
@@ -69,7 +72,7 @@ public class CategorizedCostsAnalytics {
     }
 
     public CategorizedCostsAnalyticsSnapshot toSnapshot() {
-        return new CategorizedCostsAnalyticsSnapshot(id, amount, percent, transactionsCount, categoryDescription);
+        return new CategorizedCostsAnalyticsSnapshot(id, categoryId, amount, percent, transactionsCount, categoryDescription);
     }
 
     @Override

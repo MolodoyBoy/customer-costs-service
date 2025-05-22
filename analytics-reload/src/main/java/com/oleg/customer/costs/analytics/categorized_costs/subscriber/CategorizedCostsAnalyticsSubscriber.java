@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,10 +54,12 @@ class CategorizedCostsAnalyticsSubscriber implements Subscriber {
             var created = adminCategorizedCostsAnalyticsSource.create(forCreate);
             logger.info("Categorized costs analytics created {}.", created.size());
 
+            var all = new HashMap<>(existed);
+            all.putAll(created);
+
             var forUpdate = forUpdate(
                 message.periodCostsAnalyticsById(),
-                existed,
-                created,
+                all,
                 customerCostsByCommand
             );
 
@@ -70,19 +73,15 @@ class CategorizedCostsAnalyticsSubscriber implements Subscriber {
     }
 
     private List<CategorizedCostsAnalytics> forUpdate(Map<Integer, PeriodCostsAnalytics> periodCostsAnalytics,
-                                                      Map<CategorizedCostAnalyticsCreateCommand, CategorizedCostsAnalytics> existed,
-                                                      Map<CategorizedCostAnalyticsCreateCommand, CategorizedCostsAnalytics> created,
+                                                      Map<CategorizedCostAnalyticsCreateCommand, CategorizedCostsAnalytics> all,
                                                       Map<CategorizedCostAnalyticsCreateCommand, List<CustomerCosts>> customerCostsByCommand) {
         var forUpdate = new ArrayList<CategorizedCostsAnalytics>();
 
-        customerCostsByCommand.forEach((command, customerCosts) -> {
-            final CategorizedCostsAnalytics categorizedCostsAnalytics = existed.containsKey(command)
-                ? existed.get(command)
-                : created.get(command);
-
-            PeriodCostsAnalytics periodCostsAnalytic = periodCostsAnalytics.get(command.periodCostsAnalyticsId());
+        all.forEach((command, categorizedCostsAnalytics) -> {
+            List<CustomerCosts> customerCosts = customerCostsByCommand.getOrDefault(command, List.of());
             customerCosts.forEach(categorizedCostsAnalytics::addCustomerCosts);
 
+            PeriodCostsAnalytics periodCostsAnalytic = periodCostsAnalytics.get(command.periodCostsAnalyticsId());
             categorizedCostsAnalytics.addPeriodCostsAnalytics(periodCostsAnalytic);
             forUpdate.add(categorizedCostsAnalytics);
         });

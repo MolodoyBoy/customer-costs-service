@@ -106,10 +106,10 @@ class DbCategorizedCostsAnalyticsSource implements AdminCategorizedCostsAnalytic
     public Map<CategorizedCostAnalyticsCreateCommand, CategorizedCostsAnalytics> get(Collection<CategorizedCostAnalyticsCreateCommand> keys) {
         if (keys.isEmpty()) return Map.of();
         return dslContext.select(
+                COSTS_CATEGORY.DESCRIPTION,
                 CATEGORIZED_COSTS_ANALYTICS.ID,
                 CATEGORIZED_COSTS_ANALYTICS.AMOUNT,
                 CATEGORIZED_COSTS_ANALYTICS.PERCENT,
-                COSTS_CATEGORY.DESCRIPTION,
                 CATEGORIZED_COSTS_ANALYTICS.CATEGORY_ID,
                 CATEGORIZED_COSTS_ANALYTICS.TRANSACTIONS_COUNT,
                 CATEGORIZED_COSTS_ANALYTICS.PERIOD_COST_ANALYTICS_ID
