@@ -1,0 +1,16 @@
+.analytics-by-category h2 {
+    font-weight: 500;
+}
+
+.summary-card {
+    text-align: center;
+}
+
+.summary-card h5 {
+    font-size: 0.9rem;
+}
+
+.summary-card h2 {
+    font-size: 2rem;
+    margin-bottom: 0;
+}
