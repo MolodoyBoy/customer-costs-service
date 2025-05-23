@@ -7,6 +7,7 @@ import com.oleg.customer.costs.analytics.customer_costs.query.PeriodCustomerCost
 import java.util.List;
 
 public record CategorizedCostsAnalyticsWithCosts(
+    List<CategoryCustomerCostsQuery> extrapolated,
     List<CategoryCustomerCostsQuery> customerCosts,
     CategorizedCostsAnalyticsSnapshot categorizedCostsAnalytics
 ) {}

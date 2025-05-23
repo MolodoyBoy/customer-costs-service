@@ -150,7 +150,13 @@ export default function AnalyticsDetail() {
                                     </thead>
                                     <tbody>
                                     {categories.length > 0 ? categories.map(cat => (
-                                        <tr key={cat.id} className="align-middle">
+                                        <tr
+                                            key={cat.id}
+                                            onClick={() => navigate('/analytics/category', {
+                                                state: { analyticsCategoryId: cat.id }
+                                            })}
+                                            style={{ cursor: 'pointer' }}
+                                        >
                                             <td>
                                                 <span
                                                     style={{

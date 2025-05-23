@@ -1,5 +1,9 @@
 type: object
 properties:
+    extrapolated:
+        type: array
+        items:
+            $ref: '../costs/CustomerCosts.yaml'
     customerCosts:
         type: array
         items:
@@ -7,6 +11,7 @@ properties:
     categorizedCostsAnalytics:
         $ref: 'CategorizedCostsAnalytics.yaml'
 required:
+    - extrapolated
     - customerCosts
     - categorizedCostsAnalytics
 

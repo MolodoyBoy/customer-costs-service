@@ -2,15 +2,14 @@
     font-weight: 500;
 }
 
-.summary-card {
-    text-align: center;
-}
-
-.summary-card h5 {
-    font-size: 0.9rem;
-}
-
-.summary-card h2 {
-    font-size: 2rem;
+.card-header h5 {
     margin-bottom: 0;
+}
+
+.table-light th {
+    font-weight: 500;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f8f9fa;
 }

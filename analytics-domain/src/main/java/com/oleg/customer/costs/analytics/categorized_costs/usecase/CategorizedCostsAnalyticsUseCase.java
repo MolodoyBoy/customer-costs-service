@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,12 +56,12 @@ public class CategorizedCostsAnalyticsUseCase {
         var customerCosts = getCustomerCosts.getForCategory(paginator, id);
 
         List<CategoryCustomerCostsQuery> extrapolate = extrapolate(customerCosts);
-        return new CategorizedCostsAnalyticsWithCosts(extrapolate, categorizedCostsAnalytics);
+        return new CategorizedCostsAnalyticsWithCosts(extrapolate, customerCosts, categorizedCostsAnalytics);
     }
 
     public List<CategoryCustomerCostsQuery> extrapolate(List<CategoryCustomerCostsQuery> original) {
         Map<LocalDate, CategoryCustomerCostsQuery> existingByDate = original.stream()
-            .collect(toMap(this::mapKey, identity()));
+            .collect(toMap(this::mapKey, identity(), this::merge));
 
         YearMonth yearMonth = getYearMonth(existingByDate.keySet());
         if (yearMonth == null) return List.of();
@@ -83,6 +84,10 @@ public class CategorizedCostsAnalyticsUseCase {
 
     private LocalDate mapKey(CategoryCustomerCostsQuery query) {
         return query.createdAt().toLocalDate();
+    }
+
+    private CategoryCustomerCostsQuery merge(CategoryCustomerCostsQuery a, CategoryCustomerCostsQuery b) {
+        return new CategoryCustomerCostsQuery(a.amount().add(b.amount()), a.description(), a.createdAt());
     }
 
     private YearMonth getYearMonth(Set<LocalDate> availableDates) {

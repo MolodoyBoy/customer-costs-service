@@ -303,7 +303,13 @@ export default function AnalyticsPage() {
                                     <tbody>
                                     {categories.length > 0 ? (
                                         categories.map(cat => (
-                                            <tr key={cat.id}>
+                                            <tr
+                                                key={cat.id}
+                                                onClick={() => navigate('/analytics/category', {
+                                                  state: { analyticsCategoryId: cat.id }
+                                                })}
+                                                style={{ cursor: 'pointer' }}
+                                              >
                                                 <td>{cat.categoryDescription}</td>
                                                 <td>{cat.transactionsCount}</td>
                                                 <td className="text-end">₴{cat.amount.toLocaleString()}</td>

@@ -18,6 +18,7 @@ public class CategorizedCostsAnalyticsConverter {
 
     public CategorizedCostsAnalyticsResponseDto convert(CategorizedCostsAnalyticsWithCosts entity) {
         return new CategorizedCostsAnalyticsResponseDto()
+            .extrapolated(convert(entity.extrapolated()))
             .customerCosts(convert(entity.customerCosts()))
             .categorizedCostsAnalytics(convert(entity.categorizedCostsAnalytics()));
     }
@@ -31,7 +32,7 @@ public class CategorizedCostsAnalyticsConverter {
     private CustomerCostsDto convert(CategoryCustomerCostsQuery customerCostsQuery) {
         return new CustomerCostsDto()
             .description(customerCostsQuery.description())
-            .amount(customerCostsQuery.amount().doubleValue())
+            .amount(customerCostsQuery.amount().abs().doubleValue())
             .createdAt(customerCostsQuery.createdAt().atOffset(ZoneOffset.UTC));
     }
 
