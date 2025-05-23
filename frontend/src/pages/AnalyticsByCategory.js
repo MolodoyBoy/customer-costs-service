@@ -37,6 +37,9 @@ ChartJS.register(
     Legend
 );
 
+const API_BASE = process.env.REACT_APP_API_BASE_URL;
+ApiClient.instance.basePath = API_BASE;
+
 export default function AnalyticsByCategory() {
     const navigate = useNavigate();
     const { state } = useLocation();
@@ -62,7 +65,8 @@ export default function AnalyticsByCategory() {
         if (token) {
             ApiClient.instance.defaultHeaders = {
                 ...ApiClient.instance.defaultHeaders,
-                Authorization: token
+                Authorization: token,
+                'ngrok-skip-browser-warning': 'true'
             };
         }
 

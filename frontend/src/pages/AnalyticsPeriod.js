@@ -26,6 +26,9 @@ ChartJS.register(
     Legend
 );
 
+const API_BASE = process.env.REACT_APP_API_BASE_URL;
+ApiClient.instance.basePath = API_BASE;
+
 export default function AnalyticsPage() {
     const navigate = useNavigate();
     const [periods, setPeriods]           = useState([]);
@@ -42,6 +45,7 @@ export default function AnalyticsPage() {
             ApiClient.instance.defaultHeaders = {
                 ...ApiClient.instance.defaultHeaders,
                 Authorization: token,
+                'ngrok-skip-browser-warning': 'true'
             };
         }
         new PeriodCostsAnalyticsApi().getAnalyticsPeriods((err, data) => {

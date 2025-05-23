@@ -56,6 +56,7 @@ export default function Home() {
             ApiClient.instance.defaultHeaders = {
                 ...ApiClient.instance.defaultHeaders,
                 Authorization: token,
+                'ngrok-skip-browser-warning': 'true'
             };
         }
         loadSupportedBanks();

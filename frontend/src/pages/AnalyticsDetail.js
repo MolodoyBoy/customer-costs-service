@@ -11,6 +11,9 @@ import './AnalyticsDetail.css';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+const API_BASE = process.env.REACT_APP_API_BASE_URL;
+ApiClient.instance.basePath = API_BASE;
+
 export default function AnalyticsDetail() {
     const navigate = useNavigate();
     const {state} = useLocation();
@@ -39,6 +42,7 @@ export default function AnalyticsDetail() {
             ApiClient.instance.defaultHeaders = {
                 ...ApiClient.instance.defaultHeaders,
                 Authorization: token,
+                'ngrok-skip-browser-warning': 'true'
             };
         }
         if (!periodId) return;
