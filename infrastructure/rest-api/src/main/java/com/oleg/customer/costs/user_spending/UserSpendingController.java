@@ -3,16 +3,11 @@ package com.oleg.customer.costs.user_spending;
 import com.oleg.customer.costs.api.UserSpendingApi;
 import com.oleg.customer.costs.model.UpdateSpendingDto;
 import com.oleg.customer.costs.model.UserSpendingDto;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 
 @RestController
-@CrossOrigin(
-    origins = "http://localhost:3000",
-    exposedHeaders = "Authorization"
-)
 public class UserSpendingController implements UserSpendingApi {
 
     private final UserSpendingService userSpendingService;

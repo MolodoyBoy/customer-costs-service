@@ -2,16 +2,11 @@ package com.oleg.customer.costs.bank;
 
 import com.oleg.customer.costs.api.BanksApi;
 import com.oleg.customer.costs.model.BanksListDto;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@CrossOrigin(
-    origins = "http://localhost:3000",
-    exposedHeaders = {"Authorization"}
-)
 public class BankController implements BanksApi {
 
     private final BankService bankService;

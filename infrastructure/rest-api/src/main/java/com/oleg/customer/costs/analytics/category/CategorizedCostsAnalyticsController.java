@@ -4,14 +4,9 @@ import com.oleg.customer.costs.analytics.categorized_costs.usecase.CategorizedCo
 import com.oleg.customer.costs.analytics.common.value_object.Paginator;
 import com.oleg.customer.costs.api.CategorizedCostsAnalyticsApi;
 import com.oleg.customer.costs.model.CategorizedCostsAnalyticsResponseDto;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(
-    origins = "http://localhost:3000",
-    exposedHeaders = {"Authorization"}
-)
 public class CategorizedCostsAnalyticsController implements CategorizedCostsAnalyticsApi {
 
     private final CategorizedCostsAnalyticsUseCase categorizedCostsAnalyticsUseCase;

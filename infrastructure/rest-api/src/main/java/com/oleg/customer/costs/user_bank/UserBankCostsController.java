@@ -6,16 +6,11 @@ import com.oleg.customer.costs.costs.query.CustomerCostsQuery;
 import com.oleg.customer.costs.costs.service.CustomerCostsService;
 import com.oleg.customer.costs.model.UserBankCostsCountDto;
 import com.oleg.customer.costs.model.UserBankCostsListDto;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@CrossOrigin(
-    origins = "http://localhost:3000",
-    exposedHeaders = "Authorization"
-)
 public class UserBankCostsController implements UserBankCostsApi {
 
     private final CustomerCostsService customerCostsService;

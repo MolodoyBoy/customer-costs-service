@@ -6,7 +6,6 @@ import com.oleg.customer.costs.monobank.dto.MonoWebhookPayload;
 import com.oleg.customer.costs.monobank.dto.StatementItem;
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,9 +20,6 @@ import java.time.ZoneId;
 import static java.math.BigDecimal.valueOf;
 import static org.slf4j.LoggerFactory.getLogger;
 
-@CrossOrigin(
-    origins = "http://localhost:3000"
-)
 @RestController
 @RequestMapping("/monobank/webhook")
 public class MonobankController {
