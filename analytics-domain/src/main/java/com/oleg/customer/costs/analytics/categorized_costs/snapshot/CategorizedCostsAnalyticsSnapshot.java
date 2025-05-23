@@ -7,6 +7,7 @@ public record CategorizedCostsAnalyticsSnapshot(
         int categoryId,
         BigDecimal amount,
         BigDecimal percent,
+        BigDecimal average,
         Integer transactionsCount,
         String categoryDescription
 ) {}

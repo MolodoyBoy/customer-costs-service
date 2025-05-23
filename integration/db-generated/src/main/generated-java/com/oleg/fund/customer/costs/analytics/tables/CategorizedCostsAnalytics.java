@@ -83,6 +83,11 @@ public class CategorizedCostsAnalytics extends TableImpl<Record> {
      */
     public final TableField<Record, Integer> PERIOD_COST_ANALYTICS_ID = createField(DSL.name("period_cost_analytics_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
+    /**
+     * The column <code>public.categorized_costs_analytics.average</code>.
+     */
+    public final TableField<Record, BigDecimal> AVERAGE = createField(DSL.name("average"), SQLDataType.NUMERIC, this, "");
+
     private CategorizedCostsAnalytics(Name alias, Table<Record> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
     }

@@ -1,0 +1,1 @@
+ALTER TABLE categorized_costs_analytics ADD COLUMN average NUMERIC;

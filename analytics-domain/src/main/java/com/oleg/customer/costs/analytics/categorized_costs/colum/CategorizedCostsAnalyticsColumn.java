@@ -8,6 +8,7 @@ public enum CategorizedCostsAnalyticsColumn implements Column {
     ID,
     AMOUNT,
     PERCENT,
+    AVERAGE,
     CATEGORY_ID,
     TRANSACTIONS_COUNT,
     CATEGORY_DESCRIPTION;

@@ -19,6 +19,7 @@ public class CategorizedCostsAnalyticsSnapshotMapper implements RecordMapper<Rec
             rc.get(CATEGORIZED_COSTS_ANALYTICS.CATEGORY_ID),
             getNullableField(rc, CATEGORIZED_COSTS_ANALYTICS.AMOUNT),
             getNullableField(rc, CATEGORIZED_COSTS_ANALYTICS.PERCENT),
+            getNullableField(rc, CATEGORIZED_COSTS_ANALYTICS.AVERAGE),
             getNullableField(rc, CATEGORIZED_COSTS_ANALYTICS.TRANSACTIONS_COUNT),
             getNullableField(rc, COSTS_CATEGORY.DESCRIPTION)
         );

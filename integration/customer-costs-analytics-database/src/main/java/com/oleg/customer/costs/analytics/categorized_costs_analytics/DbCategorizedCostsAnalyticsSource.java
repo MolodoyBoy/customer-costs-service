@@ -94,6 +94,7 @@ class DbCategorizedCostsAnalyticsSource implements AdminCategorizedCostsAnalytic
                 return dslContext.update(CATEGORIZED_COSTS_ANALYTICS)
                     .set(CATEGORIZED_COSTS_ANALYTICS.AMOUNT, snapshot.amount())
                     .set(CATEGORIZED_COSTS_ANALYTICS.PERCENT, snapshot.percent())
+                    .set(CATEGORIZED_COSTS_ANALYTICS.AVERAGE, snapshot.average())
                     .set(CATEGORIZED_COSTS_ANALYTICS.TRANSACTIONS_COUNT, snapshot.transactionsCount())
                     .where(CATEGORIZED_COSTS_ANALYTICS.ID.eq(snapshot.id()));
             })
@@ -110,6 +111,7 @@ class DbCategorizedCostsAnalyticsSource implements AdminCategorizedCostsAnalytic
                 CATEGORIZED_COSTS_ANALYTICS.ID,
                 CATEGORIZED_COSTS_ANALYTICS.AMOUNT,
                 CATEGORIZED_COSTS_ANALYTICS.PERCENT,
+                CATEGORIZED_COSTS_ANALYTICS.AVERAGE,
                 CATEGORIZED_COSTS_ANALYTICS.CATEGORY_ID,
                 CATEGORIZED_COSTS_ANALYTICS.TRANSACTIONS_COUNT,
                 CATEGORIZED_COSTS_ANALYTICS.PERIOD_COST_ANALYTICS_ID

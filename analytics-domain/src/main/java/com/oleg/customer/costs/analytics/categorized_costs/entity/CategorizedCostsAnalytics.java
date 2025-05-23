@@ -11,6 +11,7 @@ import java.util.Objects;
 
 import static java.math.BigDecimal.ZERO;
 import static java.math.BigDecimal.valueOf;
+import static java.math.RoundingMode.HALF_UP;
 
 public class CategorizedCostsAnalytics {
 
@@ -71,8 +72,12 @@ public class CategorizedCostsAnalytics {
         }
     }
 
+    private BigDecimal countAverage() {
+        return this.amount.divide(BigDecimal.valueOf(transactionsCount), 2, HALF_UP);
+    }
+
     public CategorizedCostsAnalyticsSnapshot toSnapshot() {
-        return new CategorizedCostsAnalyticsSnapshot(id, categoryId, amount, percent, transactionsCount, categoryDescription);
+        return new CategorizedCostsAnalyticsSnapshot(id, categoryId, amount, percent, countAverage(), transactionsCount, categoryDescription);
     }
 
     @Override

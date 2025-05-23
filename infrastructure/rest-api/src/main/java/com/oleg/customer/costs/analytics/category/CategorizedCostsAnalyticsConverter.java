@@ -8,6 +8,8 @@ import com.oleg.customer.costs.model.CategorizedCostsAnalyticsResponseDto;
 import com.oleg.customer.costs.model.CustomerCostsDto;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.ZoneOffset;
 import java.util.List;
 
@@ -36,9 +38,16 @@ public class CategorizedCostsAnalyticsConverter {
     private CategorizedCostsAnalyticsDto convert(CategorizedCostsAnalyticsSnapshot entity) {
         return new CategorizedCostsAnalyticsDto()
             .id(entity.id())
-            .amount(entity.amount().doubleValue())
-            .percent(entity.percent().doubleValue())
+            .amount(toDouble(entity.amount()))
+            .percent(toDouble(entity.percent()))
+            .average(toDouble(entity.average()))
             .transactionsCount(entity.transactionsCount())
             .categoryDescription(entity.categoryDescription());
+    }
+
+    private Double toDouble(BigDecimal value) {
+        if (value == null) return 0.0;
+
+        return value.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 }

@@ -73,7 +73,7 @@ public class PeriodCostsAnalyticsUseCase {
         return new PeriodCostsAnalyticsWithCategories(extrapolated, periodCostsAnalytics, categorizedCostsAnalytics);
     }
 
-    public static List<PeriodCustomerCostsQuery> extrapolate(YearMonth month, List<PeriodCustomerCostsQuery> original) {
+    public List<PeriodCustomerCostsQuery> extrapolate(YearMonth month, List<PeriodCustomerCostsQuery> original) {
         Map<LocalDate, PeriodCustomerCostsQuery> existingByDate = original.stream()
             .collect(toMap(PeriodCustomerCostsQuery::createdAt, identity()));
 
