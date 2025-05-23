@@ -54,8 +54,10 @@ export default function AnalyticsByCategory() {
     const [page, setPage] = useState(1);
     const pageSize = 10;
 
-    // fetch paged data
+    // Перезагружаем при изменении категории или номера страницы
     useEffect(() => {
+        if (!analyticsCategoryId) return;
+
         const token = getAuthToken();
         if (token) {
             ApiClient.instance.defaultHeaders = {
@@ -63,16 +65,21 @@ export default function AnalyticsByCategory() {
                 Authorization: token
             };
         }
-        if (!analyticsCategoryId) return;
 
         new CategorizedCostsAnalyticsApi().getCategorizedCostsAnalytics(
             analyticsCategoryId,
-            {page: 1, pageSize: 10},
+            { page, pageSize },
             (err, resp) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+
+                const cat = resp.categorizedCostsAnalytics;
                 setSummary({
-                    amount: resp.categorizedCostsAnalytics.amount,
-                    average: resp.categorizedCostsAnalytics.average,
-                    categoryDescription: resp.categorizedCostsAnalytics.categoryDescription
+                    amount: cat.amount,
+                    average: cat.average,
+                    categoryDescription: cat.categoryDescription
                 });
 
                 // resp.extrapolated: array of { amount, description, createdAt }
@@ -89,7 +96,7 @@ export default function AnalyticsByCategory() {
         navigate('/login');
     };
 
-    // chart data
+    // chart data из текущей страницы customerCosts
     const chartData = {
         labels: extrapolatedCustomerCosts.map(c =>
             new Date(c.createdAt).toLocaleDateString()
@@ -108,18 +115,12 @@ export default function AnalyticsByCategory() {
 
     const chartOptions = {
         scales: {
-            y: {
-                ticks: { callback: v => `₴${v}` }
-            },
+            y: { ticks: { callback: v => `₴${v}` } },
             x: {}
         },
         plugins: {
             legend: { display: false },
-            tooltip: {
-                callbacks: {
-                    label: ctx => `₴${ctx.parsed.y.toLocaleString()}`
-                }
-            }
+            tooltip: { callbacks: { label: ctx => `₴${ctx.parsed.y.toLocaleString()}` } }
         },
         maintainAspectRatio: false
     };
@@ -156,7 +157,7 @@ export default function AnalyticsByCategory() {
                 </Row>
 
                 <Row className="mb-5">
-                    {/* Summary card */}
+                    {/* Summary */}
                     <Col lg={4}>
                         <Card className="p-3 h-100 shadow-sm text-center">
                             <h5 className="text-muted">Total Expenses</h5>
@@ -216,20 +217,19 @@ export default function AnalyticsByCategory() {
                                     )}
                                     </tbody>
                                 </Table>
-                                {/* Simple pagination */}
-                                {customerCosts.length === pageSize && (
-                                    <Pagination className="m-3 justify-content-center">
-                                        <Pagination.Prev
-                                            disabled={page === 1}
-                                            onClick={() => setPage(p => p - 1)}
-                                        />
-                                        <Pagination.Item active>{page}</Pagination.Item>
-                                        <Pagination.Next
-                                            disabled={customerCosts.length < pageSize}
-                                            onClick={() => setPage(p => p + 1)}
-                                        />
-                                    </Pagination>
-                                )}
+
+                                {/* Pagination */}
+                                <Pagination className="m-3 justify-content-center">
+                                    <Pagination.Prev
+                                        disabled={page === 1}
+                                        onClick={() => setPage(p => Math.max(1, p - 1))}
+                                    />
+                                    <Pagination.Item active>{page}</Pagination.Item>
+                                    <Pagination.Next
+                                        disabled={customerCosts.length < pageSize}
+                                        onClick={() => setPage(p => p + 1)}
+                                    />
+                                </Pagination>
                             </Card.Body>
                         </Card>
                     </Col>
@@ -243,3 +243,4 @@ export default function AnalyticsByCategory() {
         </div>
     );
 }
+

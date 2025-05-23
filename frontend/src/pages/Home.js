@@ -347,7 +347,7 @@ export default function Home() {
                             <ul className="pagination justify-content-end mb-0">
                                 <li className={`page-item ${page === 1 ? 'disabled' : ''}`}>
                                     <button className="page-link" onClick={() => setPage(page - 1)}>
-                                        « Пред
+                                        « Prev
                                     </button>
                                 </li>
                                 <li className="page-item disabled">
@@ -357,7 +357,7 @@ export default function Home() {
                                 </li>
                                 <li className={`page-item ${page === totalPages ? 'disabled' : ''}`}>
                                     <button className="page-link" onClick={() => setPage(page + 1)}>
-                                        След »
+                                        Next »
                                     </button>
                                 </li>
                             </ul>
