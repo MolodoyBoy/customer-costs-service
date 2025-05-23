@@ -11,6 +11,7 @@ import com.oleg.customer.costs.model.PeriodCustomerCostsDto;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Component
@@ -44,11 +45,6 @@ public class PeriodCostsAnalyticsConverter {
             .differenceFromPrevious(toDouble(entity.differenceFromPrevious()));
     }
 
-    private Double toDouble(BigDecimal value) {
-        if (value == null) return 0.0;
-        return value.doubleValue();
-    }
-
     private List<CategorizedCostsAnalyticsDto> convert(List<CategorizedCostsAnalyticsSnapshot> entities) {
         return entities.stream()
             .map(this::convert)
@@ -58,9 +54,16 @@ public class PeriodCostsAnalyticsConverter {
     private CategorizedCostsAnalyticsDto convert(CategorizedCostsAnalyticsSnapshot entity) {
         return new CategorizedCostsAnalyticsDto()
             .id(entity.id())
-            .amount(entity.amount().doubleValue())
-            .percent(entity.percent().doubleValue())
+            .categoryId(entity.categoryId())
+            .amount(toDouble(entity.amount()))
+            .percent(toDouble(entity.percent()))
             .transactionsCount(entity.transactionsCount())
             .categoryDescription(entity.categoryDescription());
+    }
+
+    private Double toDouble(BigDecimal value) {
+        if (value == null) return 0.0;
+
+        return value.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 }

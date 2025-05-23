@@ -1,76 +1,100 @@
 // src/pages/AnalyticsDetail.jsx
-import React, { useState } from 'react';
+import React, {useState, useEffect} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Row, Col, Card, Table, Button } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Doughnut } from 'react-chartjs-2';
+import {Container, Row, Col, Card, Table, Button} from 'react-bootstrap';
+import {Link, useNavigate, useLocation} from 'react-router-dom';
+import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js';
+import {Doughnut} from 'react-chartjs-2';
+import {ApiClient, PeriodCostsAnalyticsApi} from 'ccs-openapi-client';
+import {getAuthToken, logout} from '../auth';
 import './AnalyticsDetail.css';
-import {logout} from "../auth";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function AnalyticsDetail() {
     const navigate = useNavigate();
+    const {state} = useLocation();
+    const periodId = state?.periodId;
 
-    // Mock data
-    const [data] = useState({
-        total: -54431.32,
-        categories: [
-            { id: 1, desc: 'Transfers',            tx: 4,  amount: -21105.32, percent: 39, color: '#6f42c1' },
-            { id: 2, desc: 'Digital Goods',        tx: 5,  amount: -7679.00,  percent: 14, color: '#fd7e14' },
-            { id: 3, desc: 'Online Stores',        tx: 1,  amount: -7177.00,  percent: 13, color: '#6610f2' },
-            { id: 4, desc: 'Taxi',                 tx: 37, amount: -5554.00,  percent: 10, color: '#007bff' },
-            { id: 5, desc: 'Budget Payments',      tx: 1,  amount: -3472.00,  percent: 6,  color: '#20c997' },
-            { id: 6, desc: 'Beauty',               tx: 3,  amount: -3149.00,  percent: 6,  color: '#e83e8c' },
-            // …more categories
-        ]
-    });
+    const [categories, setCategories] = useState([]);
+    const [total, setTotal] = useState(0);
+    const [center, setCenter] = useState(null);
 
-    // Chart dataset
-    const chartData = {
-        labels: data.categories.map(c => c.desc),
-        datasets: [{
-            data: data.categories.map(c => Math.abs(c.amount)),
-            backgroundColor: data.categories.map(c => c.color),
-            hoverOffset: 8,
-            cutout: '70%'
-        }]
+    const categoryColorMap = {
+        1: '#6f42c1', // purple
+        2: '#fd7e14', // orange
+        3: '#6610f2', // indigo
+        4: '#007bff', // blue
+        5: '#20c997', // teal
+        6: '#e83e8c', // pink
+        7: '#dc3545', // danger-red
+        8: '#198754', // success-green
+        9: '#0dcaf0', // cyan
+        10: '#ffc107'  // warning-yellow
     };
 
-    // Center label state
-    const [center, setCenter] = useState(data.categories[0]);
-
-    const options = {
-        onClick: (evt, elements) => {
-            if (elements.length) {
-                const idx = elements[0].index;
-                setCenter(data.categories[idx]);
-            }
-        },
-        plugins: {
-            tooltip: {
-                callbacks: {
-                    label: ctx =>
-                        `${data.categories[ctx.dataIndex].desc}: ₴${Math.abs(ctx.raw).toLocaleString()} (${data.categories[ctx.dataIndex].percent}%)`
-                }
-            },
-            legend: { display: false }
+    useEffect(() => {
+        const token = getAuthToken();
+        if (token) {
+            ApiClient.instance.defaultHeaders = {
+                ...ApiClient.instance.defaultHeaders,
+                Authorization: token,
+            };
         }
-    };
+        if (!periodId) return;
+        new PeriodCostsAnalyticsApi().getPeriodCostsAnalytics(
+            periodId,
+            null,
+            (err, resp) => {
+                const arr = resp.categorizedCostsAnalytics || [];
+                setCategories(arr);
+                setTotal(resp.periodCostsAnalytics.amount);
+                setCenter(arr[0] || null);
+            }
+        );
+    }, [periodId]);
 
     const handleLogout = () => {
         logout();
         navigate('/login');
     };
 
+    const chartData = {
+        labels: categories.map(c => c.categoryDescription),
+        datasets: [{
+            data: categories.map(c => Math.abs(c.amount)),
+            backgroundColor: categories.map(c => categoryColorMap[c.categoryId]),
+            hoverOffset: 6,
+            cutout: '60%'
+        }]
+    };
+
+    const options = {
+        onClick: (evt, elems) => {
+            if (elems.length) {
+                setCenter(categories[elems[0].index]);
+            }
+        },
+        plugins: {
+            legend: {display: false},
+            tooltip: {
+                callbacks: {
+                    label: ctx => {
+                        const c = categories[ctx.dataIndex];
+                        return `${c.categoryDescription}: ₴${Math.abs(c.amount).toLocaleString()}`;
+                    }
+                }
+            }
+        },
+        maintainAspectRatio: false
+    };
 
     return (
         <div className="container py-lg-3 position-relative flex-grow-1">
             <header className="mb-4 text-center position-relative">
                 <button
                     className="btn btn-outline-secondary position-absolute"
-                    style={{ top: '1rem', left: '1rem' }}
+                    style={{top: '1rem', left: '1rem'}}
                     onClick={() => navigate('/')}>
                     Home
                 </button>
@@ -79,66 +103,67 @@ export default function AnalyticsDetail() {
 
                 <button
                     className="btn btn-outline-secondary position-absolute"
-                    style={{ top: '1rem', right: '1rem' }}
+                    style={{top: '1rem', right: '1rem'}}
                     onClick={handleLogout}>
                     Logout
                 </button>
             </header>
 
             <Container fluid className="py-4 analytics-detail">
-                <div className="d-flex align-items-center mb-4">
-                    <h2 className="m-0">Expenses Details</h2>
-                </div>
+                <h2 className="mb-4">Expenses Detail</h2>
                 <Row>
-                    {/* Donut chart */}
+                    {/* Donut Chart */}
                     <Col md={6}>
                         <Card className="shadow-sm">
-                            <Card.Body className="position-relative text-center p-5">
+                            <Card.Body className="position-relative text-center p-5" style={{padding: '3rem'}}>
                                 <div className="doughnut-wrapper">
-                                    <Doughnut data={chartData} options={options} />
-                                    <div className="doughnut-center">
-                                        <div className="fw-bold">{center.desc}</div>
-                                        <div className="h4 my-1">₴{Math.abs(center.amount).toLocaleString()}</div>
-                                        <div className="text-secondary">{center.percent}%</div>
-                                    </div>
+                                    <Doughnut data={chartData} options={options}/>
+                                    {center && (
+                                        <div className="doughnut-center">
+                                            <div className="fw-bold">{center.categoryDescription}</div>
+                                            <div className="h5 my-1">₴{Math.abs(center.amount).toLocaleString()}</div>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="mt-3">
-                                    Total for May<br/>
-                                    <span className="h3 text-danger">₴{data.total.toLocaleString()}</span>
+                                    Total<br/>
+                                    <span className="h4 text-primary">₴{total.toLocaleString()}</span>
                                 </div>
                             </Card.Body>
                         </Card>
                     </Col>
 
-                    {/* Categories table */}
+                    {/* Expense Categories Table */}
                     <Col md={6}>
                         <Card className="shadow-sm">
                             <Card.Body>
                                 <Table hover striped className="mb-0">
                                     <thead className="table-light">
                                     <tr>
+                                        <th style={{width: '1rem'}}></th>
                                         <th>Category</th>
                                         <th>Transactions</th>
                                         <th className="text-end">Amount</th>
-                                        <th className="text-end">Spend %</th>
-                                        <th />
+                                        <th className="text-end">Percent</th>
+                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {data.categories.map(cat => (
+                                    {categories.length > 0 ? categories.map(cat => (
                                         <tr key={cat.id} className="align-middle">
                                             <td>
-                                                <div className="d-flex align-items-center">
-                                                    <div
-                                                        className="category-icon me-2"
-                                                        style={{ backgroundColor: cat.color }}
-                                                    >
-                                                        <i className="bi bi-arrow-right-short text-white"></i>
-                                                    </div>
-                                                    {cat.desc}
-                                                </div>
+                                                <span
+                                                    style={{
+                                                        display: 'inline-block',
+                                                        width: '12px',
+                                                        height: '12px',
+                                                        borderRadius: '50%',
+                                                        backgroundColor: categoryColorMap[cat.categoryId] || '#ccc'
+                                                    }}
+                                                />
                                             </td>
-                                            <td>{cat.tx}</td>
+                                            <td>{cat.categoryDescription}</td>
+                                            <td>{cat.transactionsCount}</td>
                                             <td className="text-end">₴{Math.abs(cat.amount).toLocaleString()}</td>
                                             <td className="text-end">{cat.percent}%</td>
                                             <td className="text-end">
@@ -147,7 +172,13 @@ export default function AnalyticsDetail() {
                                                 </Button>
                                             </td>
                                         </tr>
-                                    ))}
+                                    )) : (
+                                        <tr className="table-light">
+                                            <td colSpan={5} className="text-center text-muted">
+                                                No categories
+                                            </td>
+                                        </tr>
+                                    )}
                                     </tbody>
                                 </Table>
                             </Card.Body>

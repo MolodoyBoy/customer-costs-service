@@ -5,7 +5,8 @@
 .doughnut-wrapper {
     position: relative;
     width: 100%;
-    max-width: 300px;
+    height: 500px;
+    max-width: 800px;
     margin: 0 auto;
 }
 
@@ -14,15 +15,6 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-}
-
-.category-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .table-light th {
