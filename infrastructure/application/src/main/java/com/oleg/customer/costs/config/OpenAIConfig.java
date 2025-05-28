@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class OpenAIConfig {
 
     @Bean
-    public OpenAIClient openAIClient(@Value("${spring.ai.openai.api-key}") String apiKey) {
+    public OpenAIClient openAIClient(@Value("${oleg.ai.openai.key}") String apiKey) {
         return OpenAIOkHttpClient.builder()
                 .apiKey(apiKey)
                 .build();
