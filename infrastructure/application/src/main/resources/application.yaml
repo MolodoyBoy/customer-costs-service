@@ -46,7 +46,7 @@ springdoc:
         path: /swagger-ui.html
 oleg:
     outbox:
-        enable: false
+        enable: true
     database:
         username: dev
         password: dev
