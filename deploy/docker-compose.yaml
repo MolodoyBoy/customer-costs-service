@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+    zookeeper:
+        image: 'bitnami/zookeeper:latest'
+        container_name: zookeeper
+        environment:
+            - ALLOW_ANONYMOUS_LOGIN=yes
+        ports:
+            - '2181:2181'
+        volumes:
+            - zookeeper_data:/bitnami
+
+    customer-costs-kafka:
+        image: 'bitnami/kafka:latest'
+        container_name: customer-costs-kafka
+        depends_on:
+            - zookeeper
+        environment:
+            - KAFKA_CFG_NODE_ID=0
+            - ALLOW_PLAINTEXT_LISTENER=yes
+            - KAFKA_CFG_PROCESS_ROLES=controller,broker
+            - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+            - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@customer-costs-kafka:9093
+            - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+            - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+            - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://customer-costs-kafka:9092,CONTROLLER://customer-costs-kafka:9093
+        ports:
+            - '9092:9092'
+            - '9093:9093'
+        volumes:
+            - kafka_data:/bitnami
+
+    customer-costs-pg:
+        image: 'postgres:15.0'
+        container_name: customer-costs-pg
+        environment:
+            - POSTGRES_USER=dev
+            - POSTGRES_PASSWORD=dev
+            - POSTGRES_DB=customer-costs
+        ports:
+            - '5432:5432'
+        volumes:
+            - costs_postgres_data:/var/lib/postgresql/data
+
+    customer-costs-service:
+        image: 'molodoyboy777/customer-costs-service:b0e9e6b2434db8c5ab6514b2e40a1b9684ce762f'
+        container_name: customer-costs-service
+        depends_on:
+            - customer-costs-kafka
+            - customer-costs-pg
+        environment:
+            - OLEG_DATABASE_USERNAME=dev
+            - OLEG_DATABASE_PASSWORD=dev
+            - OLEG_KAFKA_HOST=customer-costs-kafka
+            - OLEG_DATABASE_HOST=customer-costs-pg
+            - OLEG_AI_OPENAI_KEY=mock
+        ports:
+            - '8080:8080'
+
+    customer-costs-analytics-redis:
+        image: redis
+        ports:
+            - "6379:6379"
+volumes:
+    kafka_data:
+    zookeeper_data:
+    costs_postgres_data:
+    analytics_postgres_data:
