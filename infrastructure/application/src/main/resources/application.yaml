@@ -3,6 +3,7 @@ server:
     shutdown: graceful
     max-http-request-header-size: 2MB
 
+spring:
     profiles:
         default: default
         active: default, dev
@@ -15,7 +16,6 @@ server:
         name: customer-costs
         username: ${oleg.database.username}
         password: ${oleg.database.password}
-        driver-class-name: org.postgresql.Driver
         url: 'jdbc:postgresql://${oleg.database.host}:5432/customer-costs?sslmode=disable'
         hikari:
             maximum-pool-size: 40
