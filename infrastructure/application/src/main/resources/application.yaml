@@ -3,10 +3,6 @@ server:
     shutdown: graceful
     max-http-request-header-size: 2MB
 
-spring:
-    ai:
-        openai:
-            api-key: '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'
     profiles:
         default: default
         active: default, dev
@@ -19,7 +15,7 @@ spring:
         name: customer-costs
         username: ${oleg.database.username}
         password: ${oleg.database.password}
-        url: 'jdbc:postgresql://${oleg.database.host}:5433/customer-costs?sslmode=disable'
+        url: 'jdbc:postgresql://${oleg.database.host}:5432/customer-costs?sslmode=disable'
         hikari:
             maximum-pool-size: 40
             connection-timeout: 2000
